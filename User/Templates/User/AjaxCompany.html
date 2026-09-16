@@ -1,0 +1,38 @@
+{% for i in companydata %}
+<tr>
+    <td><strong>{{ forloop.counter }}</strong></td>
+    <td style="font-weight: 600; color: #111;">{{ i.company_name }}</td>
+    <td>
+        <div class="logo-box">
+            <img src="{{ i.company_logo.url }}" alt="Logo">
+        </div>
+    </td>
+    <td><span style="color:var(--serviquo-gold); font-weight:700; font-size:11px; text-transform:uppercase;">{{ i.brand.brand_name }}</span></td>
+    <td>
+        <div class="info-box-centered">
+            <div class="flex-row-item">
+                <i class="fa-solid fa-envelope"></i>
+                <span>{{ i.company_email }}</span>
+            </div>
+            <div class="flex-row-item">
+                <i class="fa-solid fa-phone"></i>
+                <span>{{ i.company_contact }}</span>
+            </div>
+        </div>
+    </td>
+    <td style="font-size: 11px; color: var(--text-muted); max-width: 250px;">
+        {{ i.company_address|linebreaksbr }}
+    </td>
+    <td>
+        <a href="{% url 'User:CompanyRequest' i.id %}" class="btn-action">
+            <i class="fa-solid fa-paper-plane"></i> Send Request
+        </a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7" style="padding: 20px; color: #999; font-size: 12px; font-style: italic; border: none;">
+        No Companies found for this brand.
+    </td>
+</tr>
+{% endfor %}

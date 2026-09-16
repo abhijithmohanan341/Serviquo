@@ -1,0 +1,285 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --navy: #1e293b;
+        --gold: #c6943f;
+        --light-bg: #fdf6ec;
+        --card-white: #ffffff;
+        --border-subtle: rgba(0, 0, 0, 0.06);
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+    }
+
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .profile-mini-wrapper {
+        max-width: 750px;
+        margin: 60px auto;
+        padding: 0 15px;
+    }
+
+    .profile-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--navy);
+    }
+
+    .profile-card {
+        background: var(--card-white);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        border: 1px solid var(--border-subtle);
+    }
+
+    .header-section {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 30px;
+        background: #fafafa;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .round-avatar {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        padding: 4px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        flex-shrink: 0;
+    }
+
+    .round-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .user-meta h3 {
+        font-size: 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin: 0;
+        color: var(--navy);
+    }
+
+    .status-label {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--gold);
+        display: block;
+        margin-top: 5px;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-group {
+        margin-top: 18px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-unified {
+        padding: 9px 18px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        background: var(--navy);
+        color: #ffffff;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-unified:hover {
+        filter: brightness(1.2);
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15);
+    }
+
+    .btn-unified:active {
+        transform: scale(0.94);
+    }
+
+    .info-section {
+        padding: 35px;
+    }
+
+    .info-grid-compact {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+
+    .field-wrapper label {
+        display: flex;
+        align-items: center;
+        font-size: 9px;
+        font-weight: 800;
+        color: var(--gold);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .field-wrapper label i {
+        margin-right: 10px;
+    }
+
+    /* Standard tiles: Height increased slightly via padding */
+    .info-tile {
+        background: #ffffff;
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        padding: 12px 15px; 
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Address tile remains the tallest */
+    .address-tile {
+        min-height: 80px; 
+        align-items: flex-start;
+        padding-top: 12px;
+    }
+
+    .info-tile:hover {
+        border-color: var(--gold);
+        background: #fffdfa;
+    }
+
+    .info-tile span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .span-full {
+        grid-column: 1 / -1;
+    }
+
+    @media(max-width:600px) {
+        .header-section { flex-direction: column; text-align: center; }
+        .btn-group { justify-content: center; }
+        .info-grid-compact { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="profile-mini-wrapper">
+
+    <div class="profile-topbar">
+        <div class="profile-title">My Profile</div>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="header-section">
+            <div class="round-avatar">
+                {% if userdata.user_photo %}
+                <img src="{{userdata.user_photo.url}}" alt="User Profile">
+                {% else %}
+                <img src="{% static 'Main/img/default-user.png' %}" alt="Default Profile">
+                {% endif %}
+            </div>
+
+            <div class="user-meta">
+                <h3>{{userdata.user_name}}</h3>
+                <span class="status-label">
+                    <i class="fa-solid fa-user-shield"></i> Verified Member
+                </span>
+
+                <div class="btn-group">
+                    <a href="{% url 'User:EditProfile' %}" class="btn-unified">
+                        <i class="fa fa-user-edit"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'User:ChangePassword' %}" class="btn-unified">
+                        <i class="fa fa-key"></i> Change Password
+                    </a>
+                    <a href="{% url 'User:EditPhoto' %}" class="btn-unified">
+                        <i class="fa fa-image"></i> Update Photo
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-grid-compact">
+                
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                    <div class="info-tile">
+                        <span>{{userdata.user_email}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-phone"></i> Contact No</label>
+                    <div class="info-tile">
+                        <span>{{userdata.user_contact}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-city"></i> District</label>
+                    <div class="info-tile">
+                        <span>{{userdata.place.district.district_name}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-location-dot"></i> Region</label>
+                    <div class="info-tile">
+                        <span>{{userdata.place.place_name}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper span-full">
+                    <label><i class="fa-solid fa-map-pin"></i> Residential Address</label>
+                    <div class="info-tile address-tile">
+                        <span>{{userdata.user_address}}, {{userdata.place.place_name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><br>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'User:myprofile' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

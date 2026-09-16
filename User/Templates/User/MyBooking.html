@@ -1,0 +1,359 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: #f8fafc;
+        --card-shadow: 0 15px 35px rgba(15, 23, 42, .08);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        min-height: 100vh;
+    }
+
+    .mybooking-page {
+        padding: 50px 20px;
+        max-width: 1250px;
+        margin: 0 auto;
+    }
+
+    /* Page Title */
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 33px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+
+    /* Card Styling */
+    .booking-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .booking-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: var(--amazon-blue);
+        color: #fff;
+        padding: 10px 25px;
+        border-bottom-right-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        z-index: 5;
+    }
+
+    /* Header Grid - Aligned to the top line */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1.2fr 0.8fr;
+        gap: 20px;
+        padding: 80px 35px 30px;
+        border-bottom: 1px solid #f1f5f9;
+        align-items: flex-start; /* Aligns buttons to the top line of the boxes */
+    }
+
+    /* Uniform Box Styling with Hover */
+    .info-box {
+        background: var(--soft-bg);
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 22px;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        min-height: 210px;
+    }
+
+    .info-box:hover {
+        background: #fff;
+        border-color: var(--serviquo-gold);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .shop-section {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .shop-img {
+        width: 85px;
+        height: 85px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .box-label {
+        color: var(--serviquo-gold);
+        font-weight: 800;
+        font-size: 11px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .detail-text {
+        font-size: 14px;
+        color: #475569;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Status Section - Vertical alignment adjusted for top-line parity */
+    .status-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 200px;
+        padding-top: 5px; /* Fine-tuning to match text alignment in boxes */
+    }
+
+    .status-pill {
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .st-pending { background: #fffbeb; color: #92400e; }
+    .st-success { background: #f0fdf4; color: #166534; }
+    .st-process { background: #eff6ff; color: #1e40af; }
+    .st-cancel  { background: #fef2f2; color: #991b1b; }
+
+    /* Button Styling - Increased Size */
+    .btn-custom {
+        padding: 10px 10px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .btn-gold { background: var(--serviquo-gold); color: white; }
+    .btn-blue { background: var(--amazon-blue); color: white; }
+    .btn-red  { background: #f26060; color: white; }
+    .btn-green { background: #505fe9; color: white; }
+
+    .btn-custom:hover { filter: brightness(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .btn-custom:active { transform: scale(0.96); filter: brightness(0.9); }
+
+    /* Product Section */
+    .product-section { padding: 10px 15px; }
+    
+    .product-row {
+        display: grid;
+        grid-template-columns: 100px 1fr auto;
+        gap: 25px;
+        padding: 20px;
+        margin: 5px 15px;
+        border-radius: 12px;
+        align-items: start;
+        transition: background 0.3s ease;
+    }
+
+    .product-row:hover { background: #f9f9f9; }
+
+    .product-row img {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .product-description {
+        color: #666;
+        font-size: 13px;
+        margin: 5px 0 10px 0;
+        line-height: 1.6;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .product-actions-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 180px;
+    }
+
+    /* Footer */
+    .card-footer {
+        padding: 20px 35px;
+        background: #fcfcfc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .total-amount {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--amazon-blue);
+        background: #fff;
+        padding: 8px 24px;
+        border-radius: 30px;
+        border: 1px solid var(--serviquo-gold);
+    }
+
+    @media(max-width:992px){
+        .header-grid { grid-template-columns: 1fr; padding-top: 70px; }
+        .product-row { grid-template-columns: 80px 1fr; }
+        .product-actions-vertical { grid-column: span 2; flex-direction: row; flex-wrap: wrap; }
+    }
+</style>
+
+<div class="mybooking-page">
+    <div class="page-title-container">
+        <h2 class="page-title">My Booking History</h2>
+    </div><br>
+
+    {% if bookingdata %}
+        {% for i in bookingdata %}
+            {% if i.booking_amount %}
+            <div class="booking-card">
+                <div class="booking-badge">Booking &nbsp;{{ forloop.counter }}</div>
+
+                <div class="header-grid">
+                    <div class="info-box">
+                        <span class="box-label"><i class="fas fa-store"></i> Shop Details</span>
+                        {% for j in i.tbl_cart_set.all %}
+                            {% if forloop.first %}
+                            <div class="shop-section">
+                                <img src="{{ j.product.shop.shop_photo.url }}" class="shop-img">
+                                <div>
+                                    <div style="font-weight: 800; font-size: 18px; color: var(--amazon-blue);">{{ j.product.shop.shop_name }}</div>
+                                    <div class="detail-text"><i class="fas fa-envelope"></i> {{ j.product.shop.shop_email }}</div>
+                                    <div class="detail-text"><i class="fas fa-phone"></i> {{ j.product.shop.shop_contact }}</div>
+                                    <div class="detail-text"><i class="fas fa-clock"></i> 
+                                    <span class="value">
+                                            {% if i.booking_date|date:"H:i" == "00:00" %}
+                                                {{ i.booking_date|date:"F d, Y" }}
+                                            {% else %}
+                                                {{ i.booking_date|date:"F d, Y, g:i a" }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="info-box">
+                        <span class="box-label"><i class="fas fa-map-pin"></i> Delivery To</span>
+                        <div style="padding-left: 5px;">
+                            <div class="detail-text" style="font-weight: 800; color: #111; font-size: 17px;">{{ userdata.user_name }}</div>
+                            <div class="detail-text">{{ i.booking_address }}</div>
+                            <div class="detail-text"><i class="fas fa-envelope"></i><b>Email:</b> {{ userdata.user_email }}</div>
+                            <div class="detail-text"><i class="fas fa-phone"></i><b>Contact:</b> {{ userdata.user_contact }}</div>
+                        </div>
+                    </div>
+
+                    <div class="status-section">
+                        {% if i.booking_status == 1 %}
+                            <div class="status-pill st-pending"><i class="fas fa-hourglass-half"></i> Payment Pending</div>
+                            <a href="{% url 'User:shoppayment' i.id %}" class="btn-custom btn-gold"><i class="fas fa-wallet"></i> Pay Now</a>
+                            <a href="{% url 'User:OrderCancel' i.id %}" onclick="return confirm('Cancel this order?')" class="btn-custom btn-red"><i class="fas fa-times"></i> Cancel</a>
+
+                        {% elif i.booking_status == 2 %}
+                            <div class="status-pill st-success"><i class="fas fa-check"></i> Payment Done</div>
+                            <a href="{% url 'User:UserBill' i.id %}" class="btn-custom btn-blue"><i class="fas fa-receipt"></i> View Receipt</a>
+                            <a href="{% url 'User:OrderCancel' i.id %}" onclick="return confirm('Cancel this order?')" class="btn-custom btn-red"><i class="fas fa-trash"></i> Cancel Order</a>
+
+                        {% elif i.booking_status == 3 %}
+                            <div class="status-pill st-process"><i class="fas fa-box"></i> Packed</div>
+                            <a href="{% url 'User:UserBill' i.id %}" class="btn-custom btn-blue"><i class="fas fa-receipt"></i> View Receipt</a>
+
+                        {% elif i.booking_status == 4 %}
+                            <div class="status-pill st-process"><i class="fas fa-truck"></i> Shipped</div>
+                            <a href="{% url 'User:UserBill' i.id %}" class="btn-custom btn-blue"><i class="fas fa-receipt"></i> View Receipt</a>
+
+                        {% elif i.booking_status == 5 %}
+                            <div class="status-pill st-success"><i class="fas fa-home"></i> Delivered</div>
+                            <a href="{% url 'User:UserBill' i.id %}" class="btn-custom btn-blue"><i class="fas fa-receipt"></i> View Receipt</a>
+
+                        {% elif i.booking_status == 6 %}
+                            <div class="status-pill st-cancel"><i class="fas fa-ban"></i> Cancelled</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="product-section">
+                    {% for j in i.tbl_cart_set.all %}
+                    <div class="product-row">
+                        <img src="{{ j.product.product_photo.url }}" alt="product">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 800; font-size: 16px;">{{ j.product.product_name }}</div>
+                            <div class="product-description">{{ j.product.product_details }}</div>
+                            <div style="font-weight: 600; font-size: 15px;">Qty: {{ j.cart_Qty }} | Price: ₹{{ j.product.product_price }}</div>
+                        </div>
+
+                        <div class="product-actions-vertical">
+                            {% if i.booking_status == 5 %}
+                                <a href="{% url 'User:productrating' j.product.id %}" class="btn-custom btn-gold btn-large-action"><i class="fas fa-star"></i> Rate Product</a>
+                                <a href="{% url 'User:ProductComplaint' j.product.id j.id %}" class="btn-custom btn-red btn-large-action"><i class="fas fa-comment"></i> Add Complaints</a>
+                                <a href="{% url 'User:BuyNowPage' j.product.id %}" class="btn-custom btn-green btn-large-action"><i class="fas fa-redo"></i> Buy Again</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="card-footer">
+                    <div style="font-weight: 800; color: #777; text-transform: uppercase; font-size: 12px;">Total Order Amount</div>
+                    <div class="total-amount">₹ {{ i.booking_amount }}</div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center; padding:100px 20px;">
+            <i class="fas fa-shopping-basket fa-3x" style="color:#ddd; margin-bottom: 20px;"></i>
+            <h3 style="color:#444;">No Bookings Found</h3>
+        </div>
+    {% endif %}
+
+    
+</div>
+
+{% endblock content %}

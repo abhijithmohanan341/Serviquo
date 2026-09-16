@@ -1,0 +1,235 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* 1. Main Content Background */
+    body{
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    /* 2. Path Navigation */
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .path-nav span.current { color: #7b61ff; font-weight: 800; }
+
+    /* 3. Heading - Sidebar Matched & Full Underline */
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a;
+        position: relative;
+        display: block;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%; 
+    }
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%; 
+        height: 3px;
+        background: #1c233a;
+        border-radius: 10px;
+    }
+
+    /* 4. Form Styling */
+    .custom-label {
+        display: block;
+        font-weight: 700;
+        font-size: 11px;
+        color: #1c233a;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+    .sq-input {
+        border: 2px solid #ebedf2;
+        border-radius: 8px;
+        padding: 10px 15px;
+        width: 100%;
+        font-size: 14px;
+        background-color: #ffffff;
+        transition: all 0.2s;
+    }
+    .sq-input:focus {
+        border-color: #7b61ff;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(123, 97, 255, 0.1);
+    }
+
+    /* 5. Deep Press Button with Icon */
+    .btn-carbon {
+        background: #1c233a;
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 8px;
+        position: relative;
+        box-shadow: 0 5px 0px #000;
+        transition: all 0.1s;
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .btn-carbon:active {
+        transform: translateY(4px);
+        box-shadow: 0 1px 0px #000;
+    }
+
+    /* 6. Table Layout */
+    .table-wrapper { max-width: 650px; }
+    .table-modern {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+    
+    .text-center-align {
+        text-align: center !important;
+    }
+
+    .table-modern thead th {
+        color: #8d94ad;
+        font-size: 10px;
+        text-transform: uppercase;
+        padding: 10px 15px;
+    }
+
+    .table-modern tbody tr {
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: transform 0.2s;
+    }
+    .table-modern tbody tr:hover {
+        transform: scale(1.01);
+    }
+
+    .table-modern td {
+        padding: 12px 15px !important;
+        vertical-align: middle;
+        border: none;
+        font-size: 14px;
+    }
+    .table-modern td:first-child { border-radius: 10px 0 0 10px; }
+    .table-modern td:last-child { border-radius: 0 10px 10px 0; }
+
+    /* Action Buttons */
+    .action-container {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+    .badge-action {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .badge-edit { background: #eef5ff; color: #177dff; }
+    .badge-edit:hover { background: #177dff; color: #fff; }
+    .badge-delete { background: #fff2f2; color: #f3545d; }
+    .badge-delete:hover { background: #f3545d; color: #fff; }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-card { animation: fadeInUp 0.5s ease-out forwards; }
+</style>
+
+<div class="container">
+    <div class="page-inner py-5">
+        
+        <div class="path-nav">
+            MANAGE DATA &nbsp; <i class="fas fa-chevron-right" style="font-size: 9px;"></i> &nbsp; <span class="current">SERVICES</span>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 animate-card">
+                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <h4 class="brand-heading">REGISTER SERVICE</h4>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="custom-label">Enter Service Type</label>
+                                <input type="text" name="txt_services" class="sq-input" placeholder="e.g. Electrical Repair" value="{{editdata.servicetype_name}}" required>
+                            </div>
+                            <button type="submit" name="btn_submit" class="btn-carbon">
+                                 ADD SERVICE
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 animate-card">
+                <div class="table-wrapper">
+                    <h4 class="brand-heading">ACTIVE SERVICES</h4>
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th class="text-center-align" style="width: 100px;">SL NO</th>
+                                <th class="text-center-align">SERVICE TYPE</th>
+                                <th class="text-center-align" style="width: 120px;">MANAGEMENT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in Services %}
+                            <tr>
+                                <td class="text-center-align"><span class="text-muted fw-bold">{{forloop.counter}}</span></td>
+                                <td class="text-center-align"><span class="fw-bold" style="color: #1c233a; text-transform: uppercase;">{{i.servicetype_name}}</span></td>
+                                <td>
+                                    <div class="action-container">
+                                        <a href="{% url 'Admin:editservices' i.id %}" class="badge-action badge-edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'Admin:deleteservices' i.id %}" class="badge-action badge-delete" onclick="return confirm('Confirm deletion?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" class="text-center py-4 text-muted">No services found in records.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Admin:Services' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

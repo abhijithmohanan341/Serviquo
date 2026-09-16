@@ -1,0 +1,659 @@
+{% extends 'Shop/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    * {
+        box-sizing: border-box
+    }
+
+    .viewbooking-wrapper {
+        margin: 0;
+        padding: 40px 38px;
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: #0f172a;
+        counter-reset: order;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 55px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 33px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3);
+    }
+
+    @keyframes slideFade {
+        from {
+            opacity: 0;
+            transform: translateY(-20px)
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0)
+        }
+    }
+
+    /* Updated card background to match Product Management System */
+    .card {
+        max-width: 1200px;
+        margin: 0 auto 40px;
+        background: rgba(255, 255, 255, 0.5);
+        /* Semi-transparent background */
+        backdrop-filter: blur(10px);
+        /* Glass effect */
+        border: 1px solid white;
+        /* Subtle border */
+        border-radius: 18px;
+        box-shadow: 0 18px 50px rgba(15, 23, 42, .08);
+        overflow: hidden;
+        position: relative;
+        counter-increment: order;
+    }
+
+    .booking-no {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: #4f46e5;
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .booking-no::after {
+        content: " " counter(order);
+    }
+
+    .header {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 22px;
+        padding: 50px 30px 26px;
+        border-bottom: 1px solid #e5e7eb;
+        align-items: stretch;
+    }
+
+    .profile-card,
+    .address-card {
+        background: rgba(253, 246, 236, 0.6);
+        /* Slightly warmer tint for inner boxes */
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 18px;
+        display: flex;
+        gap: 16px;
+        min-height: 150px;
+        transition: background .2s ease, box-shadow .2s ease;
+    }
+
+    .profile-card:hover,
+    .address-card:hover {
+        background: rgba(99, 102, 241, 0.06);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, .06);
+    }
+
+    .profile-card {
+        align-items: center
+    }
+
+    .address-card {
+        align-items: flex-start
+    }
+
+    .profile-img {
+        width: 105px;
+        height: 105px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #6366f1;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 14px;
+    }
+
+    .profile-name {
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        opacity: 0.75;
+    }
+
+    .profile-row {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 90px auto;
+        align-items: center;
+        font-size: 15.5px;
+        color: #334155;
+    }
+
+    .profile-date {
+        margin-top: auto;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .profile-row .label {
+        font-weight: 700;
+        color: #0f172a;
+        opacity: 0.75;
+    }
+
+    .profile-row .value {
+        color: #334155;
+    }
+
+    .address-title {
+        font-size: 14px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        opacity: 0.75;
+    }
+
+    .address-text {
+        font-size: 13.5px;
+        line-height: 1.7;
+        opacity: 0.75;
+    }
+
+    .status {
+        padding: 10px 22px;
+        border-radius: 30px;
+        font-size: 12.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        width: 160px;
+        text-align: center;
+    }
+
+    .checkout {
+        background: #fff1c2;
+        color: #92400e
+    }
+
+    .paid {
+        background: #dcfce7;
+        color: #166534
+    }
+
+    .packed {
+        background: #e0f2fe;
+        color: #075985
+    }
+
+    .shipped {
+        background: #ede9fe;
+        color: #5b21b6
+    }
+
+    .delivered {
+        background: #d1fae5;
+        color: #065f46
+    }
+
+    .cancelled {
+        background: #fee2e2;
+        color: #991b1b
+    }
+
+    .section {
+        padding: 26px 30px
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: rgba(238, 242, 247, 0.5);
+    }
+
+    th {
+        padding: 15px;
+        font-size: 13px;
+        font-weight: 800;
+        color: #334155;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    td {
+        padding: 16px;
+        font-size: 14.5px;
+        text-align: center;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #e5e7eb;
+        transition: background .15s ease;
+    }
+
+    tbody tr:hover {
+        background: rgba(99, 102, 241, 0.05);
+    }
+
+    .product-img {
+        width: 85px;
+        height: 85px;
+        border-radius: 14px;
+        object-fit: cover;
+    }
+
+    .footer {
+        padding: 22px 30px;
+        background: rgba(248, 250, 252, 0.4);
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .total {
+        font-size: 20px;
+        font-weight: 900;
+        color: #4338ca;
+        background: #eef2ff;
+        padding: 10px 18px;
+        border-radius: 30px;
+    }
+
+    .no-order-wrap {
+        max-width: 500px;
+        max-height: 500px;
+        margin: 10px auto 0;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid white;
+        border-radius: 20px;
+        padding: 42px 34px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, .10);
+    }
+
+    .no-order-icon {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #fff3c4, #ffe08a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+        color: #4f46e5;
+    }
+
+    .no-order-title {
+        font-size: 24px;
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+
+    .no-order-text {
+        font-size: 14.5px;
+        color: #64748b;
+        line-height: 1.7;
+        margin-bottom: 26px;
+    }
+
+    .no-order-actions {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+    }
+
+    .no-order-btn {
+        padding: 12px 26px;
+        border-radius: 30px;
+        font-size: 13.5px;
+        font-weight: 800;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background .25s ease, box-shadow .25s ease, transform .2s ease;
+    }
+
+    .btn-refresh {
+        background: #4f46e5;
+        color: #ffffff;
+    }
+
+    .btn-refresh:hover {
+        background: #4338ca;
+        box-shadow: 0 8px 20px rgba(79, 70, 229, .35);
+        transform: translateY(-2px);
+    }
+
+    .btn-refresh:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(79, 70, 229, .35);
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: #334155
+    }
+
+    a.status {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+
+    a.status:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, .16);
+    }
+
+    a.status.packed:hover {
+        background: #bae6fd;
+        color: #075985;
+    }
+
+    a.status.shipped:hover {
+        background: #ddd6fe;
+        color: #5b21b6;
+    }
+
+    a.status.delivered:hover {
+        background: #a7f3d0;
+        color: #065f46;
+    }
+
+    a.status:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 8px rgba(15, 23, 42, .18);
+    }
+
+    .complaint-btn {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        color: #075985;
+        font-size: 12.5px;
+        font-weight: 800;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #7dd3fc;
+        box-shadow: 0 3px 8px rgba(7, 89, 133, .18);
+        transition: transform .12s ease, box-shadow .12s ease, background .18s ease;
+    }
+
+    .complaint-btn:hover {
+        background: linear-gradient(135deg, #bae6fd, #7dd3fc);
+        box-shadow: 0 6px 16px rgba(7, 89, 133, .28);
+        transform: translateY(-1px);
+    }
+
+    .complaint-btn:active {
+        transform: translateY(1px) scale(.97);
+        box-shadow: 0 2px 6px rgba(7, 89, 133, .22);
+        background: linear-gradient(135deg, #7dd3fc, #bae6fd);
+    }
+
+    .no-complaint {
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+        padding: 6px 10px;
+        border-radius: 6px;
+        display: inline-block;
+        line-height: 1;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    th,
+    td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 8%
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 22%
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+        width: 14%
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+        width: 10%
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+        width: 16%
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+        width: 20%
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+        padding-left: 60px
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+        padding-left: 50px
+    }
+</style>
+
+<div class="viewbooking-wrapper">
+
+    <div class="page-title-container">
+        <h2 class="page-title">VIEW BOOKING HISTORY</h2>
+    </div>
+
+    {% if bookingdata %}
+    {% for i in bookingdata %}
+    {% if i.booking_amount %}
+
+    <div class="card">
+
+        <div class="booking-no">Booking</div><br>
+
+        <div class="header">
+
+            <div class="profile-card">
+                <img src="{{ i.user.user_photo.url }}" class="profile-img">
+
+                <div class="profile-info">
+                    <div class="profile-name">{{ i.user.user_name }}</div>
+
+                    <div class="profile-row">
+                        <span class="label">Email</span>
+                        <span class="value">{{ i.user.user_email }}</span>
+                    </div>
+
+                    <div class="profile-row">
+                        <span class="label">Contact</span>
+                        <span class="value">{{ i.user.user_contact }}</span>
+                    </div>
+
+                    <div class="profile-row">
+                        <span class="label">Order Date</span>
+                        <span class="value">
+                            {% if i.booking_date|date:"H:i" == "00:00" %}
+                                {{ i.booking_date|date:"F d Y" }}
+                            {% else %}
+                                {{ i.booking_date|date:"F d Y, g:i a" }}
+                             {% endif %}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="address-card">
+                <div>
+                    <div class="address-title">Delivery Address</div>
+                    <div class="address-text">{{ i.booking_address|linebreaksbr }}</div>
+                </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;">
+
+                {% if i.booking_status == 1 %}
+                <div class="status checkout">Check Out</div>
+
+                {% elif i.booking_status == 2 %}
+                <div class="status paid">Payment Done</div>
+                <a href="{% url 'Shop:OrderPacked' i.id %}" class="status packed">Packed</a>
+
+                {% elif i.booking_status == 3 %}
+                <div class="status packed">Packed</div>
+                <a href="{% url 'Shop:OrderShipped' i.id %}" class="status shipped">Shipped</a>
+
+                {% elif i.booking_status == 4 %}
+                <div class="status shipped">Shipped</div>
+                <a href="{% url 'Shop:OrderDelivered' i.id %}" class="status delivered">Delivered</a>
+
+                {% elif i.booking_status == 5 %}
+                <div class="status delivered">Delivered</div>
+
+                {% elif i.booking_status == 6 %}
+                <div class="status cancelled">Cancelled</div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Product Name</th>
+                        <th>Product Image</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Complaint</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for j in i.tbl_cart_set.all %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>{{ j.product.product_name }}</td>
+
+                        <td>
+                            <img src="{{ j.product.product_photo.url }}" class="product-img">
+                        </td>
+
+                        <td>{{ j.cart_Qty }}</td>
+
+                        <td>₹{{ j.product.product_price }}</td>
+
+                        <td>
+
+                            {% if j.tbl_complaint_set.exists %}
+                            <a href="{% url 'Shop:ViewProductComplaint' j.product.id %}" class="complaint-btn">
+                                📝 View Complaint
+                            </a>
+                            {% else %}
+                            <span class="no-complaint">No Complaint</span>
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="footer">
+            <div class="total">Total Amount: ₹{{ i.booking_amount }}</div>
+        </div>
+
+    </div>
+
+    {% endif %}
+    {% endfor %}
+
+    {% else %}
+
+    <div class="no-order-wrap">
+
+        <div class="no-order-icon">🛒</div>
+
+        <div class="no-order-title">No Orders Found</div>
+
+        <div class="no-order-text">
+            No customer orders are available at the moment.
+            New orders will appear here once they are placed.
+        </div>
+
+        <div class="no-order-actions">
+            <a href="javascript:history.back()" class="no-order-btn btn-refresh">Go Back</a>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Shop:ViewBooking' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

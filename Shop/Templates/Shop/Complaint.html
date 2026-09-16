@@ -1,0 +1,291 @@
+{% extends 'Shop/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 40px;
+        margin-top: 20px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+    .form-card {
+        background: #fff;
+        max-width: 600px;
+        margin: 0 auto 60px;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border: 1px solid #f3f4f6;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .custom-input, .custom-textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #fafafa;
+    }
+
+    .btn-submit {
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        border-radius: 20px;
+        padding: 10px 40px;
+        color: #111;
+        font-size: 13px;
+        width: 100%;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        box-shadow: 0 4px 0 #a88734;
+        position: relative;
+        top: 0;
+        text-transform: uppercase;
+    }
+
+    .btn-submit:active {
+        top: 3px;
+        box-shadow: 0 1px 0 #a88734;
+    }
+
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 60px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .pro-table thead tr {
+        background-color: var(--amazon-blue);
+    }
+
+    .pro-table th {
+        padding: 15px 10px;
+        text-align: center; 
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    .pro-table td {
+        padding: 12px 10px;
+        text-align: center; 
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+        color: #444;
+    }
+
+    .action-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .btn-mgmt {
+        width: 90px;
+        padding: 6px 0;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        text-decoration: none !important;
+        display: inline-block;
+        position: relative;
+        top: 0;
+        transition: all 0.1s ease;
+    }
+
+    .btn-edit-pro {
+        background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+        border: 1px solid #90caf9;
+        color: #0d47a1 !important;
+        box-shadow: 0 3px 0 #90caf9;
+    }
+
+    .btn-delete-pro {
+        background: linear-gradient(to bottom, #ffebee, #ffcdd2);
+        border: 1px solid #ef9a9a;
+        color: #b71c1c !important;
+        box-shadow: 0 3px 0 #ef9a9a;
+    }
+
+    .btn-mgmt:active {
+        top: 2px;
+        box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+    }
+
+    .status-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+
+    .status-pending { background: #fff8e1; color: #f57c00; border: 1px solid #ffe0b2; }
+    .status-locked { background: #f5f5f5; color: #757575; border: 1px solid #e0e0e0; }
+</style>
+
+<div class="container">
+
+    <div class="page-title-container">
+        <h2 class="page-title">Post Your Complaint</h2>
+    </div>
+
+    <div class="form-card">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="field-label">Complaint Title</label>
+                <input type="text" name="txt_title" class="custom-input"
+                       value="{{ editdata.complaint_title }}" placeholder="E.g, Damage Product, Billing Issue" required>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Issue Details</label>
+                <textarea name="txt_content" class="custom-textarea" rows="4" placeholder="Describe your issue in detail..."
+                          required>{{ editdata.complaint_content }}</textarea>
+            </div>
+
+            <div style="text-align:center;">
+                <button type="submit" name="btn_submit" class="btn-submit">
+                    <i class="fa-solid fa-paper-plane" style="margin-right:8px;"></i>
+                    Submit Complaint
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="page-title-container">
+        <h2 class="page-title">My Complaints</h2>
+    </div>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Date</th>
+                    <th>Reply</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in complaintdata %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td style="font-weight:600;">{{ i.complaint_title }}</td>
+                    <td>{{ i.complaint_content }}</td>
+                    <td>{{ i.complaint_date }}</td>
+                    <td>
+                        {% if i.complaint_reply %}
+                            <span style="color:#2e7d32;font-weight:600;">
+                                {{ i.complaint_reply }}
+                            </span>
+                        {% else %}
+                            <span class="status-badge status-pending">
+                                Processing...
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-container">
+                            {% if i.complaint_status == 0 %}
+                                <a href="{% url 'Shop:EditComplaint' i.id %}" class="btn-mgmt btn-edit-pro">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </a>
+                                <a href="{% url 'Shop:DeleteComplaint' i.id %}"
+                                   class="btn-mgmt btn-delete-pro"
+                                   onclick="return confirm('Delete this complaint?')">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </a>
+                            {% else %}
+                                <span class="status-badge status-locked">
+                                    <i class="fa-solid fa-lock"></i> Locked
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding:20px;color:#bbb;font-style:italic;">
+                        No complaints available
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Shop:Complaint' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

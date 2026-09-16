@@ -1,0 +1,386 @@
+{% extends 'Company/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Lora:ital,wght@0,500;1,400&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    :root {
+        --gold: #c6943f;
+        --border: #e2e8f0;
+        --muted: #94a3b8;
+        --dark: #1e293b;
+    }
+
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .report-wrapper {
+        max-width: 1250px;
+        margin: 50px auto;
+        padding: 0 60px;
+    }
+
+    .header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 15px;
+    }
+
+    .header-flex h2 {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 34px;
+        letter-spacing: 2px;
+        font-weight: 500;
+    }
+
+    .back-btn {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+    }
+
+    .back-btn:hover {
+        color: var(--gold);
+    }
+
+    .filter-panel {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        margin-bottom: 30px;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        align-items: end;
+    }
+
+    .input-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-box label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .input-box input {
+        height: 40px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .input-box input:focus {
+        outline: none;
+        border-color: var(--gold);
+    }
+
+    .btn-generate {
+        height: 40px;
+        background: #1e293b;
+        color: #fff;
+        border: none;
+        padding: 0 20px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0 4px 0 #0f172a;
+        position: relative;
+        top: 0;
+        transition: all .1s ease;
+    }
+
+    .btn-generate:active {
+        top: 3px;
+        box-shadow: 0 1px 0 #0f172a;
+    }
+
+    .data-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .summary-strip {
+        background: #f1f5f9;
+        padding: 12px 25px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .main-table th,
+    .main-table td {
+        padding: 15px 12px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        border-right: 1px solid #edf2f7;
+        vertical-align: middle;
+    }
+
+    .main-table td {
+        font-size: 14px;
+    }
+
+    .main-table th:last-child,
+    .main-table td:last-child {
+        border-right: none;
+    }
+
+    .main-table th {
+        background: #f8fafc;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #64748b;
+        white-space: nowrap;
+    }
+
+    .col-sl {
+        width: 70px;
+    }
+
+    .col-user {
+        width: 220px;
+    }
+
+    .col-service {
+        width: 260px;
+    }
+
+    .col-tech {
+        width: 200px;
+    }
+
+    .col-date {
+        width: 190px;
+    }
+
+    .col-amount {
+        width: 140px;
+    }
+
+    .user-cell {
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .main-table td:nth-child(3) {
+        line-height: 1.6;
+        word-break: break-word;
+    }
+
+    .main-table td:nth-child(5) {
+        white-space: nowrap;
+        font-weight: 500;
+    }
+
+    .main-table td:nth-child(6) {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .total-section {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 30px;
+        background: #f8fafc;
+    }
+
+    .total-label {
+        font-size: 16px;
+        letter-spacing: 2px;
+        font-weight: 700;
+        color: #7c8ea5;
+        text-transform: uppercase;
+    }
+
+    .total-amount {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 26px;
+        color: #333;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .currency {
+        font-size: 26px;
+        line-height: 1;
+    }
+</style>
+
+<div class="report-wrapper">
+
+    <div class="header-flex">
+
+        <h2>COMPANY REVENUE REPORT</h2>
+
+        <a href="{% url 'Company:homepage' %}" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i> Return to Dashboard
+        </a>
+
+    </div>
+
+    <div class="filter-panel">
+
+        <form method="GET">
+
+            <div class="filter-row">
+
+                <div class="input-box">
+                    <label>User Name</label>
+                    <input type="text" name="user_name" value="{{user_name}}" placeholder="Search User">
+                </div>
+
+                <div class="input-box">
+                    <label>From Date</label>
+                    <input type="date" name="from_date" value="{{from_date}}">
+                </div>
+
+                <div class="input-box">
+                    <label>To Date</label>
+                    <input type="date" name="to_date" value="{{to_date}}">
+                </div>
+
+                <button type="submit" class="btn-generate">
+                    View Report
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="data-card">
+
+        <div class="summary-strip">
+            <i class="fa-solid fa-database"></i>
+            &nbsp; Total Requests : {{total_requests}}
+        </div>
+
+        <table class="main-table">
+
+            <thead>
+                <tr>
+                    <th class="col-sl">Sl No</th>
+                    <th class="col-user">User</th>
+                    <th class="col-service">Service</th>
+                    <th class="col-tech">Technician</th>
+                    <th class="col-date">Date</th>
+                    <th class="col-amount">Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% if report %}
+
+                {% for i in report %}
+
+                <tr>
+
+                    <td>{{forloop.counter}}</td>
+
+                    <td class="user-cell">
+                        {{i.user.user_name}}
+                    </td>
+
+                    <td>
+                        {{i.companyservice_content}}
+                    </td>
+
+                    <td>
+                        {% if i.technician %}
+                        {{i.technician.technician_name}}
+                        {% else %}
+                        Not Assigned
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{i.companyservice_date}}
+                    </td>
+
+                    <td>
+                        ₹ {{i.companyservice_amount}}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="6" style="text-align:center;padding:70px;color:#94a3b8">
+
+                        <i class="fa-solid fa-folder-open" style="font-size:30px"></i>
+
+                        <br><br>
+
+                        NO REVENUE RECORDS FOUND
+
+                    </td>
+
+                </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+        <div class="total-section">
+
+            <div class="total-label">
+                TOTAL REVENUE
+            </div>
+
+            <div class="total-amount">
+                <span class="currency">₹</span>
+                <span>{{total_revenue}}</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br><br>
+
+{% endblock content %}

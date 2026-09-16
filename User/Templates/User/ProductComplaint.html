@@ -1,0 +1,369 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 40px;
+        margin-top: 20px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+    /* FORM CARD */
+    .form-card {
+        background: #fff;
+        max-width: 650px;
+        margin: 0 auto 60px;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 15px 45px rgba(0,0,0,0.08);
+        border: 1px solid #f3f4f6;
+    }
+
+    .btn-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #888;
+        text-decoration: none !important;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        transition: color 0.3s;
+    }
+
+    .btn-back-link:hover { color: var(--serviquo-gold); }
+
+    .product-info-box {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        border: 1px dashed #ddd;
+    }
+
+    .product-img-holder {
+        width: 60px;
+        height: 60px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .product-img-holder img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .form-group { margin-bottom: 22px; text-align: left; }
+
+    .field-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 8px;
+    }
+
+    .custom-input, .custom-textarea {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #fafafa;
+        box-sizing: border-box;
+    }
+
+    .btn-submit-full {
+        width: 100%;
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        border-radius: 10px;
+        padding: 15px 0;
+        color: #111;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 0 #a88734;
+        position: relative;
+        top: 0;
+        text-transform: uppercase;
+    }
+
+    .btn-submit-full:active { top: 3px; box-shadow: 0 1px 0 #a88734; }
+
+    /* PROFESSIONAL TABLE STYLING */
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 60px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* Ensures strict column widths */
+    }
+
+    .pro-table thead tr { background-color: var(--amazon-blue); }
+
+    .pro-table th {
+        padding: 18px 10px;
+        text-align: center; 
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    .pro-table td {
+        padding: 15px 10px;
+        text-align: center; 
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+        word-wrap: break-word;
+    }
+
+    /* Column Width Management */
+    .col-sl { width: 50px; }
+    .col-prod { width: 140px; }
+    .col-title { width: 150px; }
+    .col-content { width: 280px; } /* Reduced width for content */
+    .col-date { width: 110px; }
+    .col-reply { width: 160px; }
+    .col-action { width: 120px; }
+
+    /* Center Aligned Content Display */
+    .complaint-content-cell {
+        text-align: center !important;
+        font-size: 12px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .ref-tag {
+        display: block;
+        font-size: 10px;
+        color: #999;
+        margin-top: 4px;
+        font-style: italic;
+    }
+
+    /* Adjusted Placeholder padding to decrease row height */
+    .empty-placeholder {
+        padding: 5px ; 
+        text-align: center;
+        color: #bbb;
+    }
+
+    .empty-placeholder i {
+        font-size: 25px; /* Slightly smaller icon to match decreased height */
+        margin-bottom: 5px;
+        display: block;
+        opacity: 0.3;
+    }
+
+    .action-stack { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+
+     .action-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .btn-mgmt {
+        width: 90px;
+        padding: 6px 0;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        text-decoration: none !important;
+        display: inline-block;
+        position: relative;
+        top: 0;
+        transition: all 0.1s ease;
+    }
+
+    .btn-edit-pro {
+        background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+        border: 1px solid #90caf9;
+        color: #0d47a1 !important;
+        box-shadow: 0 3px 0 #90caf9;
+    }
+
+    .btn-delete-pro {
+        background: linear-gradient(to bottom, #ffebee, #ffcdd2);
+        border: 1px solid #ef9a9a;
+        color: #b71c1c !important;
+        box-shadow: 0 3px 0 #ef9a9a;
+    }
+
+    .btn-mgmt:active {
+        top: 2px;
+        box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+    }
+    .status-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 50px;
+    }
+    .status-wait { background: #fff8e1; color: #f57c00; border: 1px solid #ffe0b2; }
+</style>
+
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Product Complaint Form</h2>
+    </div>
+
+    <div class="form-card">
+        <a href="{% url 'User:MyBooking' %}" class="btn-back-link">
+            <i class="fa-solid fa-arrow-left"></i> Back to My Bookings
+        </a>
+
+        <div class="product-info-box">
+            <div class="product-img-holder">
+                <img src="{{ product.product_photo.url }}" alt="{{ product.product_name }}">
+            </div>
+            <div class="product-meta" style="text-align: left;">
+                <h3 style="margin:0; color:var(--amazon-blue); font-size:18px;">{{ product.product_name }}</h3>
+            </div>
+        </div>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="field-label">Complaint Title</label>
+                <input type="text" name="txt_title" class="custom-input" value="{{ editdata.complaint_title }}" required placeholder="e.g. Damaged Item">
+            </div>
+            <div class="form-group">
+                <label class="field-label">Issue Details</label>
+                <textarea name="txt_content" class="custom-textarea" rows="5" required placeholder="Describe your issue in detail...">{{ editdata.complaint_content }}</textarea>
+            </div>
+            <div style="margin-top: 10px;">
+                <button type="submit" class="btn-submit-full">
+                    <i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Submit Complaint
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="page-title-container">
+        <h2 class="page-title">My Complaint History</h2>
+    </div>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th class="col-sl">SL No</th>
+                    <th class="col-prod">Product</th>
+                    <th class="col-title">Compliant Title</th>
+                    <th class="col-content">Complaint Content</th>
+                    <th class="col-date">Date</th>
+                    <th class="col-reply">Replay</th>
+                    <th class="col-action">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in complaintdata %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><b style="font-size: 11px;">{{ i.product.product_name }}</b></td>
+                    <td style="font-weight: 700; color: #111;">{{ i.complaint_title }}</td>
+                    <td class="complaint-content-cell">
+                        {{ i.complaint_content }}
+                    </td>
+                    <td style="color: #666;">{{ i.complaint_date }}</td>
+                    <td>
+                        {% if i.complaint_reply %}
+                            <span style="color: #2e7d32; font-weight: 700;">{{ i.complaint_reply }}</span>
+                        {% else %}
+                            <span class="status-badge status-wait">Processing</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-container">
+                            {% if i.complaint_status == 0 %}
+                                <a href="{% url 'User:EditComplaint' i.id %}" class="btn-mgmt btn-edit-pro">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </a>
+                                <a href="{% url 'User:DeleteComplaint' i.id %}" class="btn-mgmt btn-delete-pro" onclick="return confirm('Delete?')">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </a>
+                            {% else %}
+                                <span class="status-badge status-locked"><i class="fa-solid fa-lock"></i> Locked</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-placeholder">
+                            
+                            <p style="margin:0;">No complaints found in your history.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'User:ProductComplaint' product.id cart.id %}";
+</script>
+{% endif %}
+
+{% endblock content %}

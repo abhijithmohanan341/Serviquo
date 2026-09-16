@@ -1,0 +1,234 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* 1. Breadcrumb Path Styling */
+    body{
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+    }
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .path-nav span.current {
+        color: #7b61ff;
+        font-weight: 800;
+    }
+
+    /* 2. SERVIQUO Heading Design - Full Underline */
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a; /* Sidebar Dark Tone */
+        position: relative;
+        display: block;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%; 
+    }
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%; 
+        height: 3px;
+        background: #1c233a; /* Matched to sidebar color */
+        border-radius: 10px;
+    }
+
+    /* 3. External Label & Input Styling */
+    .custom-label {
+        display: block;
+        font-weight: 700;
+        font-size: 11px;
+        color: #1c233a;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+    .sq-input {
+        border: 2px solid #ebedf2;
+        border-radius: 8px;
+        padding: 10px 15px;
+        width: 100%;
+        transition: all 0.2s;
+        font-size: 14px;
+    }
+    .sq-input:focus {
+        border-color: #7b61ff;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(123, 97, 255, 0.1);
+    }
+
+    /* 4. The "Deep Press" Button Effect */
+    .btn-carbon {
+        background: #1c233a; /* Sidebar Dark Navy */
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        position: relative;
+        box-shadow: 0 5px 0px #000;
+        transition: all 0.1s;
+        width: 100%;
+        cursor: pointer;
+    }
+    .btn-carbon:active {
+        transform: translateY(4px);
+        box-shadow: 0 1px 0px #000;
+    }
+
+    /* 5. Modern Table - Optimized for Action Alignment */
+    .table-wrapper {
+        max-width: 600px;
+    }
+    .table-modern {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+    .col-idx { width: 50px; }
+    .col-name { width: auto; } 
+    .col-mgmt { width: 120px; text-align: center; }
+
+    .table-modern tbody tr {
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: transform 0.2s;
+    }
+    .table-modern td {
+        padding: 12px 15px !important;
+        vertical-align: middle;
+        border: none;
+        font-size: 14px;
+    }
+    .table-modern td:first-child { border-radius: 10px 0 0 10px; }
+    .table-modern td:last-child { border-radius: 0 10px 10px 0; }
+
+    /* 6. Perfect Button Alignment (Matched to your reference image) */
+    .action-container {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .badge-action {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .badge-edit {
+        background: #eef5ff; /* Soft Blue */
+        color: #177dff;
+    }
+    .badge-edit:hover {
+        background: #177dff;
+        color: #fff;
+    }
+
+    .badge-delete {
+        background: #fff2f2; /* Soft Red */
+        color: #f3545d;
+    }
+    .badge-delete:hover {
+        background: #f3545d;
+        color: #fff;
+    }
+</style>
+
+<div class="container">
+    <div class="page-inner">
+        
+        <div class="path-nav">
+            MANAGE DATA &nbsp; <i class="fas fa-chevron-right" style="font-size: 9px;"></i> &nbsp; <span class="current">DISTRICT</span>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-5">
+                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <h4 class="brand-heading">REGISTER DISTRICT</h4>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="custom-label">Enter District Name</label>
+                                <input type="text" name="txt_district" class="sq-input" 
+                                       placeholder="Eg. ERNAKULAM" value="{{editdata.district_name}}" required>
+                            </div>
+                            <button type="submit" name="btn_submit" class="btn-carbon">
+                                <i class="fas fa-save me-2"></i> ADD DISTRICT
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div class="table-wrapper">
+                    <h4 class="brand-heading">DATABASE RECORDS</h4>
+                    <table class="table-modern">
+                        <thead>
+                            <tr style="color: #8d94ad; font-size: 10px; text-transform: uppercase;">
+                                <th class="text-center-align" style="width: 180px;">SL NO</th>
+                                <th class="text-center-align" style="width: 200px;" >DISTRICT NAME</th>
+                                <th class="col-mgmt text-end" style="padding-right: 25px;">MANAGEMENT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in district %}
+                            <tr>
+                                <td><span class="text-muted fw-bold">{{forloop.counter}}</span></td>
+                                <td class="text-center-align" style="width: 200px; text-transform: uppercase; "><span>{{i.district_name}}</span></td>
+                                <td class="text-end">
+                                    <div class="action-container">
+                                        <a href="{% url 'Admin:editdistrict' i.id %}" class="badge-action badge-edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'Admin:deletedistrict' i.id %}" class="badge-delete badge-action" 
+                                           onclick="return confirm('Confirm deletion?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">No data found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Admin:district' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

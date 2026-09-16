@@ -1,0 +1,251 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+
+body.wrapper{
+background:#f4f6fc;
+}
+
+.path-nav{
+font-size:13px;
+color:#8d94ad;
+margin-bottom:20px;
+font-weight:500;
+text-transform:uppercase;
+letter-spacing:1px;
+}
+
+.path-nav span{
+color:#7b61ff;
+font-weight:700;
+}
+
+.brand-heading{
+font-family:'Public Sans',sans-serif;
+font-weight:800;
+font-size:1.2rem;
+color:#1c233a;
+margin-bottom:25px;
+text-transform:uppercase;
+letter-spacing:1px;
+position:relative;
+}
+
+.brand-heading:after{
+content:"";
+position:absolute;
+bottom:-6px;
+left:0;
+width:100%;
+height:3px;
+background:#1c233a;
+border-radius:10px;
+}
+
+.form-card{
+background:#ffffff;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 20px rgba(0,0,0,0.06);
+width:450px;
+margin:auto;
+}
+
+.form-card table{
+width:100%;
+}
+
+.form-card td{
+padding:10px;
+font-size:13px;
+}
+
+.form-card input[type=text],
+.form-card select{
+width:100%;
+padding:8px;
+border:1px solid #ddd;
+border-radius:6px;
+outline:none;
+}
+
+.submit-btn{
+background:#1c233a;
+color:#fff;
+border:none;
+padding:8px 20px;
+border-radius:6px;
+font-size:12px;
+font-weight:600;
+cursor:pointer;
+box-shadow:0 3px 0 #0f1527;
+}
+
+.submit-btn:active{
+transform:translateY(2px);
+box-shadow:0 1px 0 #0f1527;
+}
+
+.table-modern{
+width:100%;
+border-collapse:separate;
+border-spacing:0 10px;
+margin-top:30px;
+}
+
+.table-modern th{
+font-size:11px;
+text-transform:uppercase;
+color:#8d94ad;
+padding:12px;
+text-align:center;
+}
+
+.table-modern td{
+background:#fff;
+padding:12px;
+text-align:center;
+font-size:13px;
+}
+
+.action-btn{
+display:inline-block;
+padding:5px 14px;
+font-size:11px;
+border-radius:6px;
+text-decoration:none;
+font-weight:700;
+text-transform:uppercase;
+}
+
+.edit-btn{
+background:#eef4ff;
+border:1px solid #3a7bfd;
+color:#3a7bfd;
+}
+
+.delete-btn{
+background:#fff1f1;
+border:1px solid #ff4d4d;
+color:#ff4d4d;
+}
+
+.action-btn:active{
+transform:translateY(2px);
+}
+
+</style>
+
+<div class="container">
+<div class="page-inner py-5">
+
+<div class="path-nav">
+CATEGORY MANAGEMENT
+<i class="fas fa-chevron-right" style="font-size:9px;"></i>
+<span>SUBCATEGORY</span>
+</div>
+
+<h4 class="brand-heading">SUB CATEGORY MANAGEMENT</h4>
+
+<div class="form-card">
+
+<form action="" method="post">
+{% csrf_token %}
+
+<table>
+
+<tr>
+<td>Category</td>
+
+<td>
+<select name="sel_category" id="sel_category" required>
+
+<option value="">---Select Category---</option>
+
+{% for i in category %}
+<option
+{% if editdata.category_id == i.id %}
+selected
+{% endif %}
+value="{{i.id}}">
+
+{{i.category_name}}
+
+</option>
+{% endfor %}
+
+</select>
+</td>
+</tr>
+
+<tr>
+<td>SubCategory</td>
+
+<td>
+<input type="text"
+name="txt_subcategory"
+id="txt_subcategory"
+value="{{editdata.subcategory_name}}"
+placeholder="Enter SubCategory">
+</td>
+</tr>
+
+<tr>
+<td colspan="2" align="center">
+<input type="submit" name="btn_submit" value="Submit" class="submit-btn">
+</td>
+</tr>
+
+</table>
+
+</form>
+
+</div>
+
+
+<table class="table-modern">
+
+<tr>
+<th>Sl No</th>
+<th>Category</th>
+<th>SubCategory</th>
+<th>Action</th>
+</tr>
+
+{% for i in subcategory %}
+
+<tr>
+
+<td>{{ forloop.counter}}</td>
+
+<td>{{ i.category.category_name}}</td>
+
+<td>{{ i.subcategory_name}}</td>
+
+<td>
+
+<a href="{% url 'Admin:editSubCategory' i.id %}" class="action-btn edit-btn">Edit</a>
+
+<a href="{% url 'Admin:deletesubcategory' i.id %}" class="action-btn delete-btn">Delete</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+</div>
+
+{% if msg %}
+<script>
+alert("{{msg}}");
+window.location="{% url 'Admin:SubCategory' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

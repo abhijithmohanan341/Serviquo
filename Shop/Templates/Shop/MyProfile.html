@@ -1,0 +1,280 @@
+{% extends 'Shop/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --navy:#1e293b;
+    --gold:#c6943f;
+    --light-bg:#fdf6ec;
+    --card-white:#ffffff;
+    --border-subtle: rgba(0,0,0,0.06);
+    --text-main:#1e293b;
+    --text-muted:#64748b;
+}
+
+body{
+    background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+    background-attachment: fixed;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.profile-mini-wrapper{
+    max-width: 750px;
+    margin: 40px auto;
+    padding: 0 15px;
+}
+
+.profile-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.profile-title{
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--navy);
+}
+
+.profile-card{
+    background: var(--card-white);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+}
+
+.header-section{
+    display:flex;
+    align-items:center;
+    gap:25px;
+    padding:30px;
+    background: #fafafa;
+    border-bottom:1px solid var(--border-subtle);
+}
+
+.round-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    padding: 3px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+}
+
+.round-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.shop-meta h3{
+    font-size:22px;
+    text-transform: uppercase;
+    font-weight:700;
+    margin: 0;
+}
+
+.status-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-top: 4px;
+}
+
+.btn-group{
+    margin-top:15px;
+    display:flex;
+    gap:10px;
+}
+
+.btn-unified{
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    background: var(--navy);
+    color: #ffffff;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-unified:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 10px rgba(198, 148, 63, 0.2);
+}
+
+.btn-unified:active {
+    transform: scale(0.94);
+}
+
+.info-section{
+    padding:30px;
+}
+
+.info-grid-compact{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px; /* Increased gap to fit labels */
+}
+
+/* Heading style moved outside the box */
+.field-wrapper label {
+    display: flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Gap between icon and heading text */
+.field-wrapper label i {
+    margin-right: 10px;
+}
+
+/* Increased box height via padding */
+.info-tile {
+    background: #fdfdfd;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 12px 15px; /* Increased padding */
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+}
+
+/* Significantly increased address box height */
+.address-tile {
+    min-height: 80px;
+    align-items: flex-start;
+    padding-top: 15px;
+}
+
+.info-tile:hover {
+    border-color: var(--gold);
+    background: #fffdfa;
+}
+
+.info-tile span{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.span-full{ grid-column: 1 / -1; }
+
+@media(max-width:600px){
+    .header-section { flex-direction: column; text-align: center; }
+    .btn-group { justify-content: center; }
+    .info-grid-compact { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="profile-mini-wrapper">
+
+    <div class="profile-topbar">
+        <div class="profile-title">My Profile</div>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="header-section">
+            <div class="round-avatar">
+                <img src="{{shopdata.shop_photo.url}}" alt="Shop Photo">
+            </div>
+
+            <div class="shop-meta">
+                <h3>{{shopdata.shop_name}}</h3>
+                <span class="status-label">
+                    <i class="fa-solid fa-shop"></i>  &nbsp; Verified Shop
+                </span>
+
+                <div class="btn-group">
+                    <a href="{% url 'Shop:EditProfile' %}" class="btn-unified">
+                        <i class="fa fa-pen"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'Shop:ChangePassword' %}" class="btn-unified">
+                        <i class="fa fa-lock"></i> Change Password
+                    </a>
+                    <a href="{% url 'Shop:EditPhoto' %}" class="btn-unified">
+                        <i class="fa fa-camera"></i> Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-grid-compact">
+                
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-envelope"></i> Email</label>
+                    <div class="info-tile">
+                        <span>{{shopdata.shop_email}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-phone"></i> Contact</label>
+                    <div class="info-tile">
+                        <span>{{shopdata.shop_contact}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-map-marker-alt"></i> District</label>
+                    <div class="info-tile">
+                        <span>{{shopdata.place.district.district_name}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper">
+                    <label><i class="fa-solid fa-location-arrow"></i> Place</label>
+                    <div class="info-tile">
+                        <span>{{shopdata.place.place_name}}</span>
+                    </div>
+                </div>
+
+                <div class="field-wrapper span-full">
+                    <label><i class="fa-solid fa-home"></i> Address</label>
+                    <div class="info-tile address-tile">
+                        <span>{{shopdata.shop_address}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><br><br>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Shop:ShopProfile' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

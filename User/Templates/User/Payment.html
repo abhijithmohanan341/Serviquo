@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Gateway</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    padding:0;
+    background:#eef2f7;
+    font-family:'Segoe UI',Tahoma,sans-serif
+}
+
+.page{
+    max-width:900px;
+    margin:30px auto;
+    display:flex;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 15px 45px rgba(0,0,0,.12);
+    background:#fff;
+}
+
+/* LEFT PANEL */
+.side-panel{
+    width:50%;
+    background:linear-gradient(90deg,#1f42ce,#4232e9);
+    color:#fff;
+    padding:40px 35px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+}
+
+.side-panel h2{
+    font-size:26px;
+    font-weight:800;
+    margin-bottom:14px;
+}
+
+.side-panel p{
+    font-size:14px;
+    line-height:1.7;
+    opacity:.95;
+}
+
+.secure-box{
+    margin-top:22px;
+    background:rgba(255,255,255,.14);
+    border-radius:14px;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;        /* vertical center */
+    justify-content:center;    /* horizontal center */
+    gap:10px;
+    font-weight:600;
+    text-align:center;
+}
+
+
+/* RIGHT PANEL */
+.wrapper{
+    width:50%;
+    padding:35px;
+}
+
+.heading{
+    text-align:center;
+    margin-bottom:32px;
+}
+
+.heading h2{
+    margin:0;
+    font-size:32px;
+    font-weight:700;
+    background:linear-gradient(90deg,#1f42ce,#4232e9);
+    background-clip:text;
+    color:transparent
+}
+.heading p{margin:5px 0;color:#777}
+
+.section-gap{
+    margin-bottom:28px;
+}
+
+.form-label{
+    font-size:14px;
+    margin-bottom:6px;
+    color:#444;
+    font-weight:600;
+    display:block
+}
+
+.input-box{
+    width:100%;
+    height:44px;
+    padding:12px;
+    font-size:14px;
+    border-radius:8px;
+    border:1px solid #cfd3d9;
+    outline:none;
+    transition:.25s
+}
+.input-box:focus{
+    border-color:#4a6cf7;
+    box-shadow:0 0 6px rgba(74,108,247,.35)
+}
+
+.row{
+    display:flex;
+    gap:15px;
+}
+.row>div{flex:1}
+
+/* PAYMENT TYPE */
+.payment-type{
+    display:flex;
+    gap:12px;
+    margin-bottom:24px;
+}
+.payment-type input{display:none}
+
+.payment-type label{
+    flex:1;
+    text-align:center;
+    padding:12px;
+    border:2px solid #cfd3d9;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:700;
+    transition:.25s
+}
+.payment-type input:checked + label{
+    background:linear-gradient(90deg,#1f42ce,#4232e9);
+    color:#fff;
+    border:none
+}
+
+/* CARD & UPI BOXES */
+#cardBox,
+#upiBox{
+    margin-bottom:32px;
+}
+
+#upiBox .input-box{
+    margin-top:6px;
+}
+
+/* AMOUNT */
+.amount-box{
+    background:linear-gradient(90deg,#e8ecff,#f1e7ff);
+    padding:12px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:18px;
+    text-align:center;
+    color:#3a3f52;
+    border:1px solid #d7ddff;
+    margin-bottom:28px
+}
+
+.btn-pay{ 
+    width:100%; 
+    height:48px; border:none; 
+    border-radius:14px; 
+    color:#fff; 
+    font-weight:800; 
+    font-size:15px; 
+    cursor:pointer; 
+    background:linear-gradient(90deg,#1f42ce,#4232e9); 
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; 
+} 
+/* Hover = slight lift */ 
+
+.btn-pay:hover{ 
+    box-shadow:0 10px 22px rgba(31,66,206,.35); 
+
+} /* Click / Press effect */ 
+
+.btn-pay:active{ 
+    transform:scale(0.97); 
+    box-shadow:0 4px 10px rgba(31,66,206,.25); 
+    filter:brightness(0.95); 
+}
+
+/* LOGOS */
+.card-logos{
+    text-align:center;
+    margin-top:22px
+}
+.card-logos i{
+    font-size:34px;
+    margin:0 10px;
+    color:#6a7dfc;
+}
+
+.hide{display:none}
+
+@media(max-width:900px){
+    .page{flex-direction:column}
+    .side-panel,.wrapper{width:100%}
+}
+.card-logos i{
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.card-logos i:hover{
+    transform: translateY(-3px) scale(1.1);
+    opacity: 0.85;
+}
+
+.card-logos i:active{
+    transform: scale(0.95);
+}
+
+</style>
+</head>
+<body>
+    <br>
+<div class="page">
+<!-- LEFT -->
+<div class="side-panel">
+    <lottie-player
+        src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json"
+        background="transparent"
+        speed="1"
+        style="width:260px;height:260px;margin:0 auto 25px;"
+        loop autoplay>
+    </lottie-player>
+
+    <h2>Secure Payment Gateway</h2>
+    <p>Your payment information is encrypted and secure.We don’t store your card or UPI details.</p>
+    
+    <div class="secure-box">
+        <i class="fa fa-lock"></i> 256-bit SSL Encryption
+    </div>
+    <div class="secure-box">
+        <i class="fa fa-shield"></i> PCI DSS Compliant
+    </div>
+</div>
+
+<!-- RIGHT -->
+<div class="wrapper">
+<form method="post">
+{% csrf_token %}
+
+<div class="heading">
+    <h2>SECURE PAYMENT</h2>
+    <p>Complete your payment securely</p>
+</div>
+
+<!-- <div class="payment-type">
+    <input type="radio" name="paymode" id="cardMode" checked>
+    <label for="cardMode"><i class="fa fa-credit-card"></i> Card</label>
+
+    <input type="radio" name="paymode" id="upiMode">
+    <label for="upiMode"><i class="fa fa-mobile"></i> UPI</label>
+</div> -->
+
+<div id="cardBox">
+    <label class="form-label">Card Number</label>
+    <input type="text" id="credit-card" class="input-box" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+
+    <label class="form-label section-gap" style="margin-top:18px;">Name on Card</label>
+    <input type="text" id="card-name" class="input-box" placeholder="John Doe" required>
+
+    <div class="row section-gap" style="margin-top:18px;">
+        <div>
+            <label class="form-label">Expiry Date</label>
+            <input type="text" id="credit-card-exp" class="input-box" placeholder="MM/YY" maxlength="5" required>
+        </div>
+        <div>
+            <label class="form-label">CVV</label>
+            <input type="text" id="credit-card-ccv" class="input-box" placeholder="123" minlength="3" required>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="upiBox" class="hide">
+    <label class="form-label">UPI ID</label>
+    <input type="text" id="upi-id" class="input-box" placeholder="example@upi">
+</div> -->
+
+<label class="form-label">Total Amount</label>
+<div class="amount-box">₹ {{Amount}}</div>
+
+<button type="submit" class="btn-pay">
+    <i class="fa fa-lock"></i> Pay Securely
+</button>
+<br>
+<div class="card-logos">
+    <i class="fa fa-cc-visa"></i>
+    <i class="fa fa-google"></i>
+    <i class="fa fa-cc-paypal"></i>
+    <i class="fa fa-amazon"></i>
+    <i class="fa fa-bank"></i>
+</div>
+</form>
+</div>
+</div>
+
+<!-- EXISTING TOGGLE SCRIPT -->
+
+<script>
+    const cardMode = document.getElementById("cardMode");
+    const upiMode  = document.getElementById("upiMode");
+    const cardBox  = document.getElementById("cardBox");
+    const upiBox   = document.getElementById("upiBox");
+    const cardInputs = cardBox.querySelectorAll("input");
+    const upiInput   = document.getElementById("upi-id");
+
+    function enableCard(){
+        cardBox.classList.remove("hide");
+        upiBox.classList.add("hide");
+        cardInputs.forEach(i => i.required = true);
+        upiInput.required = false;
+    }
+    function enableUPI(){
+        upiBox.classList.remove("hide");
+        cardBox.classList.add("hide");
+        cardInputs.forEach(i => i.required = false);
+        upiInput.required = true;
+    }
+
+    cardMode.addEventListener("change", enableCard);
+    upiMode.addEventListener("change", enableUPI);
+    </script>
+
+    <!-- VALIDATION SCRIPT (ADDED ONLY) -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const card = document.getElementById("credit-card");
+        card.addEventListener("input", function () {
+            let v = this.value.replace(/\D/g, "").substring(0,16);
+            this.value = v.match(/.{1,4}/g)?.join(" ") || v;
+        });
+
+        const exp = document.getElementById("credit-card-exp");
+        exp.addEventListener("input", function () {
+            let v = this.value.replace(/\D/g,"").substring(0,4);
+            this.value = v.length >= 3 ? v.substring(0,2) + "/" + v.substring(2) : v;
+        });
+
+        const cvv = document.getElementById("credit-card-ccv");
+        cvv.addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g,"").substring(0,3);
+        });
+
+        const name = document.getElementById("card-name");
+        name.addEventListener("input", function () {
+            this.value = this.value.replace(/[^a-zA-Z ]/g,"");
+        });
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const card = document.getElementById("credit-card");
+        const name = document.getElementById("card-name");
+        const exp  = document.getElementById("credit-card-exp");
+        const cvv  = document.getElementById("credit-card-ccv");
+        const upi  = document.getElementById("upi-id");
+
+        /* ================= CARD NUMBER ================= */
+        card.addEventListener("input", function () {
+            this.setCustomValidity("");
+        });
+
+        card.addEventListener("invalid", function () {
+            this.setCustomValidity("Please enter a valid 16-digit card number");
+        });
+
+        card.addEventListener("blur", function () {
+            const digits = this.value.replace(/\s/g, "");
+            if (!/^\d{16}$/.test(digits)) {
+                this.setCustomValidity("Please enter a valid 16-digit card number");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+
+        /* ================= CARDHOLDER NAME ================= */
+        name.addEventListener("input", function () {
+            this.setCustomValidity("");
+
+            if (this.value.length > 0) {
+                this.value =
+                    this.value.charAt(0).toUpperCase() +
+                    this.value.slice(1).replace(/[^a-zA-Z ]/g, "");
+            }
+        });
+
+        name.addEventListener("invalid", function () {
+            this.setCustomValidity("Please enter the cardholder name as shown on the card");
+        });
+
+        /* ================= EXPIRY DATE ================= */
+        exp.addEventListener("input", function () {
+            this.setCustomValidity("");
+        });
+
+        /* Required message ONLY */
+        exp.addEventListener("invalid", function () {
+            if (this.value === "") {
+                this.setCustomValidity("Please enter the card expiry date");
+            }
+        });
+
+        /* Logical validation */
+        exp.addEventListener("blur", function () {
+            const value = this.value;
+
+            if (!/^\d{2}\/\d{2}$/.test(value)) {
+                this.setCustomValidity("Expiry date must be in MM/YY format (e.g., 12/25)");
+                return;
+            }
+
+            const month = parseInt(value.substring(0, 2), 10);
+            const year  = parseInt(value.substring(3, 5), 10);
+
+            if (month < 1 || month > 12) {
+                this.setCustomValidity("Please enter a valid expiry month between 01 and 12");
+                return;
+            }
+
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            const currentYear  = now.getFullYear() % 100;
+
+            if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                this.setCustomValidity("The card expiry date must be later than the current date");
+                return;
+            }
+
+            this.setCustomValidity("");
+        });
+
+        /* ================= CVV ================= */
+        cvv.addEventListener("input", function () {
+            this.setCustomValidity("");
+        });
+
+        cvv.addEventListener("invalid", function () {
+            this.setCustomValidity("Please enter the 3-digit security code (CVV)");
+        });
+
+        cvv.addEventListener("blur", function () {
+            if (!/^\d{3}$/.test(this.value)) {
+                this.setCustomValidity("The CVV must be a 3-digit number");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+
+        /* ================= UPI ID ================= */
+        
+        // if (upi) {
+
+        //     upi.addEventListener("input", function () {
+        //         this.setCustomValidity("");
+        //     });
+
+        //     upi.addEventListener("invalid", function () {
+        //         if (this.value === "") {
+        //             this.setCustomValidity("Please enter your UPI ID");
+        //         }
+        //     });
+
+        //     upi.addEventListener("blur", function () {
+        //         const upiPattern = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
+
+        //         if (!upiPattern.test(this.value)) {
+        //             this.setCustomValidity("Please enter a valid UPI ID (e.g., username@bank)");
+        //         } else {
+        //             this.setCustomValidity("");
+        //         }
+        //     });
+        // }
+    });
+</script>
+</body>
+</html>

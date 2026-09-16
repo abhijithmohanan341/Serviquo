@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: #eef2f7;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Wrapper Card */
+.wrapper{
+    text-align: center;
+    padding: 42px 46px;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    animation: fadeIn 0.7s ease-out;
+    width: 360px;
+}
+
+/* Gradient Heading */
+.wrapper h1{
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg,#4a6cf7,#9b59ff);
+    background-clip: text;
+    color: transparent;
+}
+
+/* Amount */
+.amount{
+    font-size: 22px;
+    font-weight: 800;
+    color: #2f3542;
+    margin-bottom: 22px;
+}
+
+/* Loader Circle */
+.loader{
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    border: 6px solid #d6ddff;
+    border-top-color: #4a6cf7;
+    animation: spin 1.2s linear infinite, glow 2s ease-in-out infinite;
+    margin: 0 auto 20px;
+}
+
+/* Loader Shadow Glow */
+@keyframes glow {
+    0% { box-shadow: 0 0 6px #4a6cf7; }
+    50% { box-shadow: 0 0 18px #9b59ff; }
+    100% { box-shadow: 0 0 6px #4a6cf7; }
+}
+
+/* Spin Animation */
+@keyframes spin{
+    from{transform: rotate(0deg);}
+    to{transform: rotate(360deg);}
+}
+
+/* Fade-in Card */
+@keyframes fadeIn{
+    from{opacity:0; transform: translateY(14px);}
+    to{opacity:1; transform: translateY(0);}
+}
+
+/* Status Text */
+.loading-text{
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 12px;
+}
+
+/* Step Info */
+.step-text{
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 18px;
+}
+
+/* Security Info */
+.security{
+    font-size: 13px;
+    color: #4a6cf7;
+    font-weight: 600;
+}
+</style>
+
+<script type="text/javascript">
+function preventBack() { window.history.forward(); }
+setTimeout("preventBack()", 0);
+window.onunload = function () { null };
+</script>
+
+</head>
+
+<body onload="startLoader()">
+
+<div class="wrapper">
+
+    <h1>Processing Payment</h1>
+
+    <br>
+
+    <div class="loader"></div>
+    <br>
+
+    <div class="loading-text">
+        Please wait while we securely process your transaction
+    </div>
+
+    <div class="step-text">
+        Verifying payment • Confirming details • Completing transaction
+    </div>
+
+    <div class="security">
+        🔒 256-bit SSL Secured Payment
+    </div>
+
+</div>
+
+<script>
+function startLoader() {
+    setTimeout(function(){
+        window.location = "{% url 'User:paymentsuc' %}";
+    }, 5000);
+}
+</script>
+
+</body>
+</html>

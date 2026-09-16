@@ -1,0 +1,210 @@
+{% extends 'ServiceProvider/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --card-shadow: 0 18px 50px rgba(15, 23, 42, .08);
+    }
+
+    body {
+        background: linear-gradient(135deg, rgba(255, 246, 230, 0.4) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .viewbooking-wrapper {
+        padding: 60px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Professional Form Card */
+    .remark-card {
+        width: 100%;
+        max-width: 700px;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Heading Integrated into the Accent Bar */
+    .card-header-accent {
+        background: var(--amazon-blue);
+        padding: 20px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid var(--serviquo-gold);
+    }
+
+    .header-title-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+    }
+
+    .header-title-group i {
+        color: var(--serviquo-gold);
+        font-size: 20px;
+    }
+
+    .header-title-group h2 {
+        margin: 0;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 22px;
+        text-transform: uppercase;
+        color: #e2dfdf;
+        letter-spacing: 2px;
+        font-weight: 400;
+    }
+
+    .status-badge {
+        font-size: 10px;
+        background: #e3e3decc;
+        color: black;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .form-container {
+        padding: 40px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        letter-spacing: 0.8px;
+    }
+
+    .remark-textarea {
+        width: 100%;
+        padding: 18px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--amazon-blue);
+        resize: none;
+        transition: all 0.3s ease;
+        background: #f8fafc;
+        line-height: 1.6;
+    }
+
+    .remark-textarea:focus {
+        outline: none;
+        border-color: var(--serviquo-gold);
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(198, 148, 63, 0.1);
+    }
+
+    /* Action Buttons */
+    .btn-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .btn-submit {
+        padding: 12px 35px;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 800;
+        background: var(--serviquo-gold);
+        color: white;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: transform 0.1s ease;
+        box-shadow: 0 4px 15px rgba(198, 148, 63, 0.2);
+    }
+
+    .btn-submit:active {
+        transform: scale(0.95);
+    }
+
+    .btn-back {
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.2s ease;
+    }
+
+    .btn-back:hover {
+        color: var(--amazon-blue);
+    }
+</style>
+
+<div class="viewbooking-wrapper">
+    <div class="remark-card">
+        <div class="card-header-accent">
+            <div class="header-title-group">
+                <i class="fas fa-file-signature"></i>
+                <h2>REJECT REPLY</h2>
+            </div>
+            <div class="status-badge">Service Provider Log</div>
+        </div>
+
+        <form action="" method="post" class="form-container">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="txt_remark">Service Details & Observations</label>
+                <textarea 
+                    name="txt_reject" 
+                    id="txt_reject" 
+                    class="remark-textarea" 
+                    rows="7" 
+                    placeholder="Provide a detailed summary of the work completed or any specific observations..." 
+                    required></textarea>
+            </div>
+
+            <div class="btn-row">
+                <a href="javascript:history.back()" class="btn-back">
+                    <i class="fa-solid fa-circle-left"></i> Discard Changes
+                </a>
+                
+                <button type="submit" name="btn_submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Submit Remark
+                </button>
+            </div>
+        </form>
+    </div>
+</div><br><br>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'ServiceProvider:ServiceRejectReply' i.id%}";
+</script>
+{% endif %}
+
+{% endblock content %}

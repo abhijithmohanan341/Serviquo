@@ -1,0 +1,411 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .path-nav span.current {
+        color: #7b61ff;
+        font-weight: 800;
+    }
+
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a;
+        position: relative;
+        display: block;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%;
+    }
+
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #1c233a;
+        border-radius: 10px;
+    }
+
+    .tab-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 35px;
+    }
+
+    .tab-container {
+        background: #ffffff;
+        padding: 6px;
+        border-radius: 10px;
+        display: inline-flex;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .tab-btn {
+        padding: 10px 25px;
+        border: none;
+        background: transparent;
+        color: #8d94ad;
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.3s ease;
+    }
+
+    .tab-btn.active {
+        background: #1c233a;
+        color: #ffffff;
+        box-shadow: 0 4px 15px rgba(28, 35, 58, 0.4);
+        transform: scale(1.05);
+    }
+
+    .table-modern {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        table-layout: fixed;
+    }
+
+    .table-modern thead th {
+        color: #8d94ad;
+        font-size: 10px;
+        text-transform: uppercase;
+        padding: 15px 5px;
+        text-align: center;
+        letter-spacing: 1px;
+        border-left: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .table-modern thead th:first-child { border-left: none; }
+
+    /* Column Widths - SL NO reduced */
+    .col-sl { width: 55px; white-space: nowrap; } 
+    .col-profile { width: 80px; }
+    .col-name { width: 140px; }
+    .col-email { width: 180px; }
+    .col-contact { width: 120px; }
+    .col-exp { width: 100px; }
+    .col-address { width: 180px; }
+    .col-location { width: 140px; }
+    .col-proof { width: 110px; }
+    .col-mgmt { width: 140px; }
+
+    .table-modern tbody tr {
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: rowAppear 0.4s forwards;
+    }
+
+    @keyframes rowAppear {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: #fcfcff;
+        box-shadow: 0 8px 25px rgba(123, 97, 255, 0.15);
+        transform: scale(1.005) translateY(-2px);
+    }
+
+    .table-modern td {
+        padding: 15px 5px !important;
+        vertical-align: middle;
+        font-size: 13px;
+        text-align: center;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        border-left: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .table-modern td:first-child { 
+        border-left: none; 
+        white-space: nowrap; 
+    }
+
+    .profile-img {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ebedf2;
+        transition: transform 0.3s ease;
+    }
+
+    .profile-img:hover { transform: rotate(5deg) scale(1.1); }
+
+    .proof-img {
+        width: 100%;
+        max-width: 90px;
+        height: 55px;
+        border-radius: 4px;
+        object-fit: cover;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        border: 1px solid #eee;
+        transition: 0.3s ease;
+    }
+
+    .proof-img:hover { filter: brightness(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+    .mgmt-actions-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .status-pill {
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 9px;
+        font-weight: 800;
+        text-decoration: none;
+        text-transform: uppercase;
+        display: block;
+        width: 85%;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+
+    .pill-accept {
+        background: #eefdf5;
+        color: #28a745;
+        border: 1px solid #28a745;
+        box-shadow: 0 3px 0px #28a745;
+    }
+
+    .pill-accept:hover { background: #28a745; color: #fff; }
+    .pill-accept:active { transform: translateY(2px); box-shadow: 0 1px 0px #28a745; }
+
+    .pill-reject {
+        background: #fff2f2;
+        color: #f3545d;
+        border: 1px solid #f3545d;
+        box-shadow: 0 3px 0px #f3545d;
+    }
+
+    .pill-reject:hover { background: #f3545d; color: #fff; }
+    .pill-reject:active { transform: translateY(2px); box-shadow: 0 1px 0px #f3545d; }
+
+    .tab-content {
+        display: none;
+        animation: fadeInSlide 0.5s ease forwards;
+    }
+
+    .tab-content.active { display: block; }
+
+    @keyframes fadeInSlide {
+        from { opacity: 0; transform: translateX(10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+</style>
+
+<div class="container">
+    <div class="page-inner py-5">
+        <div class="path-nav">
+            SERVICE PROVIDER MANAGEMENT
+            <i class="fas fa-chevron-right" style="font-size:9px;"></i>
+            <span class="current">DIRECTORY</span>
+        </div>
+
+        <h4 class="brand-heading">SERVICE PROVIDER DATABASE</h4>
+
+        <div class="tab-wrapper">
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="openTab(event,'newRequests')">New Requests</button>
+                <button class="tab-btn" onclick="openTab(event,'acceptedList')">Accepted</button>
+                <button class="tab-btn" onclick="openTab(event,'rejectedList')">Rejected</button>
+            </div>
+        </div>
+
+        <div id="newRequests" class="tab-content active">
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th class="col-sl">SL NO</th>
+                            <th class="col-profile">PHOTO</th>
+                            <th class="col-name">NAME</th>
+                            <th class="col-email">EMAIL</th>
+                            <th class="col-contact">CONTACT</th>
+                            <th class="col-exp">EXPERIENCE</th>
+                            <th class="col-address">ADDRESS</th>
+                            <th class="col-location">LOCATION</th>
+                            <th class="col-proof">PROOF</th>
+                            <th class="col-mgmt">MANAGEMENT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in serviceproviderdata %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td><a href="{{i.serviceprovider_photo.url}}" target="_blank"><img src="{{i.serviceprovider_photo.url}}" class="profile-img"></a></td>
+                            <td style="font-weight: 700; color: #1c233a;">{{i.serviceprovider_name}}</td>
+                            <td>{{i.serviceprovider_email}}</td>
+                            <td>{{i.serviceprovider_contact}}</td>
+                            <td>{{i.experience.experience_range}}</td>
+                            <td style="font-size: 12px; line-height: 1.4;">{{i.serviceprovider_address}}</td>
+                            <td style="font-size: 11px;">{{i.place.district.district_name}}<br><b>{{i.place.place_name}}</b></td>
+                            <td><a href="{{i.serviceprovider_proof.url}}" target="_blank"><img src="{{i.serviceprovider_proof.url}}" class="proof-img"></a></td>
+                            <td>
+                                <div class="mgmt-actions-container">
+                                    <a href="{% url 'Admin:ServiceProviderAccept' i.id %}" class="status-pill pill-accept">Accept</a>
+                                    <a href="{% url 'Admin:ServiceProviderReject' i.id %}" class="status-pill pill-reject">Reject</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="10" class="text-center py-5">No New Requests Available</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="acceptedList" class="tab-content">
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th class="col-sl">SL NO</th>
+                            <th class="col-profile">PHOTO</th>
+                            <th class="col-name">NAME</th>
+                            <th class="col-email">EMAIL</th>
+                            <th class="col-contact">CONTACT</th>
+                            <th class="col-exp">EXPERIENCE</th>
+                            <th class="col-address">ADDRESS</th>
+                            <th class="col-location">LOCATION</th>
+                            <th class="col-proof">PROOF</th>
+                            <th class="col-mgmt">MANAGEMENT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in ac %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td><img src="{{i.serviceprovider_photo.url}}" class="profile-img"></td>
+                            <td style="font-weight: 700;">{{i.serviceprovider_name}}</td>
+                            <td>{{i.serviceprovider_email}}</td>
+                            <td>{{i.serviceprovider_contact}}</td>
+                            <td>{{i.experience.experience_range}}</td>
+                            <td style="font-size: 12px;">{{i.serviceprovider_address}}</td>
+                            <td style="font-size: 11px;">{{i.place.district.district_name}}<br><b>{{i.place.place_name}}</b></td>
+                            <td><a href="{{i.serviceprovider_proof.url}}" target="_blank"><img src="{{i.serviceprovider_proof.url}}" class="proof-img"></a></td>
+                            <td>
+                                <div class="mgmt-actions-container">
+                                    <a href="{% url 'Admin:ServiceProviderReject' i.id %}" class="status-pill pill-reject">Reject</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="10" class="text-center py-5">No Accepted Providers</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="rejectedList" class="tab-content">
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th class="col-sl">SL NO</th>
+                            <th class="col-profile">PHOTO</th>
+                            <th class="col-name">NAME</th>
+                            <th class="col-email">EMAIL</th>
+                            <th class="col-contact">CONTACT</th>
+                            <th class="col-exp">EXPERIENCE</th>
+                            <th class="col-address">ADDRESS</th>
+                            <th class="col-location">LOCATION</th>
+                            <th class="col-proof">PROOF</th>
+                            <th class="col-mgmt">MANAGEMENT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in rj %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td><img src="{{i.serviceprovider_photo.url}}" class="profile-img" style="filter:grayscale(1);"></td>
+                            <td style="font-weight: 700;">{{i.serviceprovider_name}}</td>
+                            <td>{{i.serviceprovider_email}}</td>
+                            <td>{{i.serviceprovider_contact}}</td>
+                            <td>{{i.experience.experience_range}}</td>
+                            <td style="font-size: 12px;">{{i.serviceprovider_address}}</td>
+                            <td style="font-size: 11px;">{{i.place.district.district_name}}<br><b>{{i.place.place_name}}</b></td>
+                            <td><a href="{{i.serviceprovider_proof.url}}" target="_blank"><img src="{{i.serviceprovider_proof.url}}" class="proof-img"></a></td>
+                            <td>
+                                <div class="mgmt-actions-container">
+                                    <a href="{% url 'Admin:ServiceProviderAccept' i.id %}" class="status-pill pill-accept">Accept</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="10" class="text-center py-5">No Rejected Providers</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+        
+        const rows = document.querySelectorAll(`#${tabName} tbody tr`);
+        rows.forEach((row, index) => {
+            row.style.animation = 'none';
+            row.offsetHeight; 
+            row.style.animation = `rowAppear 0.4s forwards ${index * 0.05}s`;
+        });
+    }
+</script>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'Admin:ViewServiceProvider' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

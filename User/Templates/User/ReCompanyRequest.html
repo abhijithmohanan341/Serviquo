@@ -1,0 +1,189 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --text-muted: #565959;
+    }
+
+    body {
+        background: linear-gradient(135deg, rgba(255, 246, 230, 0.4) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    /* Heading Style */
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 15px;
+        opacity: 0.9;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3);
+    }
+
+    /* Form Card */
+    .request-card {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .company-display {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--serviquo-gold);
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 10px;
+    }
+
+    /* Textarea styling */
+    textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-family: inherit;
+        font-size: 14px;
+        resize: none; 
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+    textarea:focus {
+        outline: none;
+        border-color: var(--serviquo-gold);
+        box-shadow: 0 0 0 3px rgba(198, 148, 63, 0.15);
+    }
+
+    /* Button Layout */
+    .button-row {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        margin-top: 30px;
+        gap: 15px;
+    }
+
+    .btn-base {
+        border-radius: 8px; /* Slightly squarer for more modern look */
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        box-sizing: border-box;
+        height: 50px;
+        text-decoration: none;
+        user-select: none;
+    }
+
+    /* Cancel Button with Press Effect */
+    .btn-back {
+        background: #f0f2f2;
+        border: 1px solid #d5d9d9;
+        color: #111;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 0 30px;
+        box-shadow: 0 2px 0px #d5d9d9;
+    }
+
+    .btn-back:active {
+        transform: translateY(2px);
+        box-shadow: 0 0px 0px transparent;
+    }
+
+    /* Submit Button with Press Effect */
+    .btn-submit {
+        flex-grow: 1;
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        color: #111;
+        font-size: 15px;
+        font-weight: 600;
+        box-shadow: 0 3px 0px #a88734;
+    }
+
+    .btn-submit:hover {
+        background: #f4d078;
+    }
+
+    .btn-submit:active {
+        transform: translateY(3px);
+        box-shadow: 0 0px 0px transparent;
+    }
+</style>
+
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Re-Company Request</h2>
+    </div>
+
+    <div class="request-card">
+        <form action="" method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Recipient Company</label>
+                <div class="company-display">{{ old.company.company_name }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="txt_content">Request Content</label>
+                <textarea name="txt_content" id="txt_content" rows="5" placeholder="Briefly describe your requirements..." required>{{ old.companyservice_content }}</textarea>
+            </div>
+
+            <div class="button-row">
+                <a href="javascript:history.back()" class="btn-base btn-back">Cancel</a>
+                
+                <button type="submit" name="btn_submit" class="btn-base btn-submit">Update & Submit Request</button>
+            </div>
+        </form>
+    </div>
+</div><br><br>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'User:MyCompanyRequest' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

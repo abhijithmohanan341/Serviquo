@@ -1,0 +1,417 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Review & Rating System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <style>
+        :root {
+            --serviquo-gold: #c6943f;
+            --serviquo-dark: #232f3e;
+            --serviquo-btn-border: #a88734;
+        }
+
+        body {
+            background-color: #fcfcfc;
+        }
+
+        /* Page Title Style */
+        .review-title-section {
+            padding: 40px 0 30px;
+            text-align: center;
+        }
+
+        .review-title-section h2 {
+            font-family: 'Times New Roman', serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #111;
+            margin: 0;
+            display: inline-block;
+            border-bottom: 3px solid var(--serviquo-gold);
+            padding-bottom: 10px;
+        }
+
+        /* Card Styling */
+        .card {
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--serviquo-dark) !important;
+            color: white !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 25px;
+            border: none;
+        }
+
+        /* Back Button - 3D Press Effect */
+        .btn-back-3d {
+            background: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 5px 15px;
+            color: #333 !important;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none !important;
+            box-shadow: 0 3px 0 #bbb;
+            position: relative;
+            top: 0;
+            transition: all 0.1s ease;
+        }
+
+        .btn-back-3d:active {
+            top: 2px;
+            box-shadow: 0 1px 0 #bbb;
+        }
+
+        /* General 3D Button Style (Review & Submit) */
+        .btn-press-3d {
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            border: 1px solid var(--serviquo-btn-border);
+            color: #111 !important;
+            font-weight: 700;
+            border-radius: 25px;
+            padding: 10px 35px;
+            box-shadow: 0 4px 0 var(--serviquo-btn-border);
+            transition: all 0.1s ease;
+            position: relative;
+            top: 0;
+            outline: none !important;
+            cursor: pointer;
+        }
+
+        .btn-press-3d:active {
+            top: 3px;
+            box-shadow: 0 1px 0 var(--serviquo-btn-border);
+        }
+
+        .text-warning {
+            color: var(--serviquo-gold) !important;
+        }
+
+        .progress-bar.bg-warning {
+            background-color: var(--serviquo-gold) !important;
+        }
+
+        .star-light {
+            color: #e9ecef;
+        }
+
+        /* Progress Bar Container Track */
+        .progress {
+            background-color: #f0f0f0;
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        /* Modal Customization */
+        .modal-header {
+            background-color: var(--serviquo-dark);
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .close {
+            color: white !important;
+            opacity: 1;
+            text-shadow: none;
+            outline: none;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .progress-label-left {
+            float: left;
+            margin-right: 0.5em;
+            line-height: 1em;
+        }
+
+        .rating-bars {
+            padding-top: 10px;
+        }
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .rating-label {
+            width: 40px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .rating-label i {
+            color: #f0c14b;
+            font-size: 13px;
+        }
+
+        .progress {
+            flex: 1;
+            height: 12px;
+            background: #e6e6e6;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 12px;
+            border-radius: 20px;
+            background: #c6943f;
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+
+<body onload="starrating()">
+    <div class="review-title-section">
+        <h2>Service Review</h2>
+    </div>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <b>Rating Summary</b>
+                <a href="{% url 'User:MyServiceRequest' %}" class="btn-back-3d">
+                    <i class="fas fa-arrow-left mr-1"></i> BACK
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4 text-center border-right">
+                        <h1 class="text-warning mt-4 mb-2">
+                            {% if avg %}
+                            <b><span id="average_rating">{{avg}}</span> / 5</b>
+                            {% else %}
+                            <b><span id="average_rating">0</span> / 5</b>
+                            {% endif %}
+                        </h1>
+                        <div class="mb-3">
+                            <i class="fas fa-star {% if avg >= 1 %}text-warning{% else %}star-light{% endif %}"></i>
+                            <i class="fas fa-star {% if avg >= 2 %}text-warning{% else %}star-light{% endif %}"></i>
+                            <i class="fas fa-star {% if avg >= 3 %}text-warning{% else %}star-light{% endif %}"></i>
+                            <i class="fas fa-star {% if avg >= 4 %}text-warning{% else %}star-light{% endif %}"></i>
+                            <i class="fas fa-star {% if avg >= 5 %}text-warning{% else %}star-light{% endif %}"></i>
+                        </div>
+                        <h6 class="text-muted">Total Rating Score</h6>
+                    </div>
+
+                    <div class="col-sm-4 border-right rating-bars">
+
+                        <div class="rating-row">
+                            <span class="rating-label">5 <i class="fas fa-star"></i></span>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="five_star_progress"></div>
+                            </div>
+                        </div>
+
+                        <div class="rating-row">
+                            <span class="rating-label">4 <i class="fas fa-star"></i></span>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="four_star_progress"></div>
+                            </div>
+                        </div>
+
+                        <div class="rating-row">
+                            <span class="rating-label">3 <i class="fas fa-star"></i></span>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="three_star_progress"></div>
+                            </div>
+                        </div>
+
+                        <div class="rating-row">
+                            <span class="rating-label">2 <i class="fas fa-star"></i></span>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="two_star_progress"></div>
+                            </div>
+                        </div>
+
+                        <div class="rating-row">
+                            <span class="rating-label">1 <i class="fas fa-star"></i></span>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="one_star_progress"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-sm-4 text-center d-flex flex-column justify-content-center">
+                        <h6 class="mb-3">How was your service?</h6>
+                        <button type="button" name="add_review" id="add_review" class="btn btn-press-3d mx-auto">
+                            <i class="fas fa-edit mr-2"></i> REVIEW NOW
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5" id="review_content">
+            {% if data %}
+            {% for i in data %}
+            <div class="card mb-3">
+                <div class="card-header"
+                    style="background-color: #f8fafc !important; color: #333 !important; border-bottom: 1px solid #eee;">
+                    <span><b>{{i.user.user_name}}</b></span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        {% for j in ar %}
+                        <i
+                            class="fas fa-star {% if j <= i.rating_data %}text-warning{% else %}star-light{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="mb-0">{{i.user_review}}</p>
+                    <hr>
+                    <small class="text-muted"><i class="far fa-calendar-alt mr-1"></i> Posted on: {{i.datetime}}</small>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="review_modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="color: #8d8888; font-family: 'Times New Roman', Times, serif;">Write a Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center mt-2 mb-4">
+                        <i class="fas fa-star star-light submit_star mr-1" id="submit_star_1" data-rating="1"
+                            style="cursor:pointer"></i>
+                        <i class="fas fa-star star-light submit_star mr-1" id="submit_star_2" data-rating="2"
+                            style="cursor:pointer"></i>
+                        <i class="fas fa-star star-light submit_star mr-1" id="submit_star_3" data-rating="3"
+                            style="cursor:pointer"></i>
+                        <i class="fas fa-star star-light submit_star mr-1" id="submit_star_4" data-rating="4"
+                            style="cursor:pointer"></i>
+                        <i class="fas fa-star star-light submit_star mr-1" id="submit_star_5" data-rating="5"
+                            style="cursor:pointer"></i>
+                    </h4>
+                    <input type="hidden" name="txt_lid" id="txt_lid" value="{{mid}}" />
+                    <div class="form-group">
+                        <textarea name="user_review" id="user_review" class="form-control" rows="4"
+                            placeholder="Share the details of your experience..."></textarea>
+                    </div>
+                    <div class="form-group text-center mt-4">
+                        <button type="button" class="btn btn-press-3d" id="save_review">SUBMIT REVIEW</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var rating_data = 0;
+
+            $('#add_review').click(function () {
+                $('#review_modal').modal('show');
+            });
+            $('.close').click(function () {
+                $('#review_modal').modal('hide');
+            });
+
+            $(document).on('mouseenter', '.submit_star', function () {
+                var rating = $(this).data('rating');
+                reset_background();
+                for (var count = 1; count <= rating; count++) {
+                    $('#submit_star_' + count).addClass('text-warning').removeClass('star-light');
+                }
+            });
+
+            function reset_background() {
+                for (var count = 1; count <= 5; count++) {
+                    $('#submit_star_' + count).addClass('star-light').removeClass('text-warning');
+                }
+            }
+
+            $(document).on('mouseleave', '.submit_star', function () {
+                reset_background();
+                for (var count = 1; count <= rating_data; count++) {
+                    $('#submit_star_' + count).addClass('text-warning').removeClass('star-light');
+                }
+            });
+
+            $(document).on('click', '.submit_star', function () {
+                rating_data = $(this).data('rating');
+            });
+
+            $('#save_review').click(function () {
+                var user_review = $('#user_review').val();
+                var sid = $('#txt_lid').val();
+
+                if (user_review == '') {
+                    alert("Please fill your review");
+                    return false;
+                } else if (rating_data == 0) {
+                    alert("Please select a star rating");
+                    return false;
+                } else {
+                    $.ajax({
+                        url: "{% url 'User:serviceajaxstar' %}",
+                        data: { rating_data: rating_data, user_review: user_review, sid: sid },
+                        success: function (data) {
+                            if (data.status === "rated") {
+                                alert("You have already reviewed this service");
+                            }
+                            $('#review_modal').modal('hide');
+                            window.location.reload();
+                        }
+                    })
+                }
+            });
+        });
+
+        function starrating() {
+            var pdt = document.getElementById("txt_lid").value;
+            $.ajax({
+                url: "{% url 'User:servicestarrating' %}",
+                data: { pdt: pdt },
+                success: function (data) {
+                    var total = data.total_review > 0 ? data.total_review : 1;
+                    // Correct word-based ID targeting
+                    $('#five_star_progress').css('width', (data.five / total) * 100 + '%');
+                    $('#four_star_progress').css('width', (data.four / total) * 100 + '%');
+                    $('#three_star_progress').css('width', (data.three / total) * 100 + '%');
+                    $('#two_star_progress').css('width', (data.two / total) * 100 + '%');
+                    $('#one_star_progress').css('width', (data.one / total) * 100 + '%');
+                }
+            })
+        }
+    </script>
+</body>
+<br><br><br>
+
+</html>
+
+{% endblock content %}

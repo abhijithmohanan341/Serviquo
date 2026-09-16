@@ -1,0 +1,672 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>SERVIQUO : : Admin Dashboard</title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <link rel="icon" href="{% static 'Admin/assets/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
+
+  <!-- Fonts and icons -->
+  <script src="{% static 'Admin/assets/js/plugin/webfont/webfont.min.js' %}"></script>
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["assets/css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'Admin/assets/css/plugins.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'Admin/assets/css/kaiadmin.min.css' %}" />
+
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/css/demo.css' %}" />
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+      background-attachment: fixed;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--text-main);
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" data-background-color="dark">
+      <div class="sidebar-logo">
+
+        <!-- Clean Single Logo Header -->
+        <div class="logo-header d-flex align-items-center justify-content-between" data-background-color="dark"
+          style="padding:18px 8px;">
+
+          <a href="{% url 'Admin:homepage' %}" class="logo d-flex align-items-center text-decoration-none">
+
+            <!-- Infinity Icon -->
+            <span style="
+            font-size: 46px;
+            font-weight: 600;
+            background: linear-gradient(90deg,#7b61ff,#ff6ec4);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 10px;">
+            </span>
+
+            <!-- Brand Name -->
+            <span style="
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
+            opacity: 0.5;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            letter-spacing: 2px;">
+              &nbsp;SERVIQUO
+            </span>
+
+          </a>
+
+          <!-- Toggle Button -->
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right text-white"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav nav-secondary">
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:homepage' %}">
+                <i class="fas fa-home"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#masterData">
+                <i class="fas fa-layer-group"></i>
+                <p>Manage Data</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="masterData">
+                <ul class="nav nav-collapse">
+                  <li><a href="{% url 'Admin:district' %}"><span class="sub-item">Add District</span></a></li>
+                  <li><a href="{% url 'Admin:Place' %}"><span class="sub-item">Add Place</span></a></li>
+                  <li><a href="{% url 'Admin:Services' %}"><span class="sub-item">Add Service</span></a></li>
+                  <li><a href="{% url 'Admin:Brand' %}"><span class="sub-item">Add Brand</span></a></li>
+                  <li><a href="{% url 'Admin:Category' %}"><span class="sub-item">Add Category</span></a></li>
+                  <li><a href="{% url 'Admin:Experience' %}"><span class="sub-item">Add Experience</span></a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:ViewUser' %}">
+                <i class="fas fa-users"></i>
+                <p>User List</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:ViewCompany' %}">
+                <i class="fas fa-city"></i>
+                <p>Company List</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:ViewServiceProvider' %}">
+                <i class="fas fa-user-cog"></i>
+                <p>Service Providers List</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:ViewShop' %}">
+                <i class="fas fa-store"></i>
+                <p>Shops List</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:admin_report' %}">
+                <i class="fas fa-chart-bar"></i>
+                <p>Reports</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:ViewComplaint' %}">
+                <i class="fa fa-envelope"></i>
+                <p>Complaints</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:ViewFeedback' %}">
+                <i class="fas fa-comment-dots"></i>
+                <p>Feedback</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'Admin:Logout' %}">
+                <i class="fas fa-sign-out-alt"></i>
+                <p>Logout</p>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
+    <div class="main-panel">
+      <div class="main-header">
+        <div class="main-header-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="index.html" class="logo">
+              <img src="{% static 'Admin/assets/img/kaiadmin/logo_serviquo.png' %}" alt="navbar brand"
+                class="navbar-brand" height="20" />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <!-- <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                  </button>
+                </div>
+                <input type="text" placeholder="Search ..." class="form-control" />
+              </div>
+            </nav> -->
+
+            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+              <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                  aria-expanded="false" aria-haspopup="true">
+                  <i class="fa fa-search"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                  <form class="navbar-left navbar-form nav-search">
+                    <div class="input-group">
+                      <input type="text" placeholder="Search ..." class="form-control" />
+                    </div>
+                  </form>
+                </ul>
+              </li>
+
+
+              <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bell"></i>
+                  <span class="notification">{{total_pending}}</span>
+                </a>
+                <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+                  <li>
+                    <div class="dropdown-title">
+                      You have 4 new notification
+                    </div>
+                  </li>
+                  <li>
+                    <div class="notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+
+                        {% if shop_pending > 0 %}
+                        <a href="{% url 'Admin:ViewShop' %}">
+                          <div class="notif-icon notif-primary">
+                            <i class="fa fa-store"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">{{shop_pending}} New Shop Requests</span>
+                          </div>
+                        </a>
+                        {% endif %}
+
+                        {% if company_pending > 0 %}
+                        <a href="{% url 'Admin:ViewCompany' %}">
+                          <div class="notif-icon notif-warning">
+                            <i class="fa fa-building"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">{{company_pending}} New Company Requests</span>
+                          </div>
+                        </a>
+                        {% endif %}
+
+                        {% if sp_pending > 0 %}
+                        <a href="{% url 'Admin:ViewServiceProvider' %}">
+                          <div class="notif-icon notif-success">
+                            <i class="fa fa-user-cog"></i>
+                          </div>
+                          <div class="notif-content">
+                            <span class="block">{{sp_pending}} New Service Provider Requests</span>
+                          </div>
+                        </a>
+                        {% endif %}
+
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item topbar-icon dropdown hidden-caret">
+                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-envelope"></i>
+                </a>
+                <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
+                  <li>
+                    <div class="dropdown-title d-flex justify-content-between align-items-center">
+                      Messages
+                      <a href="#" class="small">Mark all as read</a>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="message-notif-scroll scrollbar-outer">
+                      <div class="notif-center">
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="{% static 'Admin/assets/img/jm_denis.jpg' %}" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Company Request</span>
+                            <span class="block"> New company registered </span>
+                            <span class="time">5 minutes ago</span>
+                          </div>
+                        </a>
+
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="{% static 'Admin/assets/img/chadengle.jpg' %}" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Service Request</span>
+                            <span class="block"> New home service request </span>
+                            <span class="time">12 minutes ago</span>
+                          </div>
+                        </a>
+
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="{% static 'Admin/assets/img/mlane.jpg' %}" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Shop Order</span>
+                            <span class="block"> New product order </span>
+                            <span class="time">20 minutes ago</span>
+                          </div>
+                        </a>
+
+                        <a href="#">
+                          <div class="notif-img">
+                            <img src="{% static 'Admin/assets/img/talha.jpg' %}" alt="Img Profile" />
+                          </div>
+                          <div class="notif-content">
+                            <span class="subject">Complaint</span>
+                            <span class="block"> New complaint submitted </span>
+                            <span class="time">30 minutes ago</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </li> -->
+
+
+              <li class="nav-item topbar-user dropdown hidden-caret">
+                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                  <div class="avatar-sm">
+                    <img src="{% static 'Admin/assets/img/jm_denis.jpg' %}" alt="..."
+                      class="avatar-img rounded-circle" />
+                  </div>
+                  <span class="profile-username">
+                    <span class="op-7"></span>
+                    <span class="fw-bold">Abhijith Mohanan</span>
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                  <div class="dropdown-user-scroll scrollbar-outer">
+                    <li>
+                      <div class="user-box">
+                        <div class="avatar-lg">
+                          <img src="{% static 'Admin/assets/img/jm_denis.jpg' %}" alt="image profile"
+                            class="avatar-img rounded" />
+                        </div>
+                        <div class="u-text">
+                          <h4><b>ABHIJITH MOHANAN</b></h4>
+                          <p class="text-muted"><b>abhijith@gmail.com</b></p>
+                          <a href="{% url 'Admin:AdminRegistration' %}" class="btn btn-xs btn-secondary btn-sm">View
+                            Profile</a>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'Admin:Logout' %}"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
+                    </li>
+                  </div>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+      {% block content %}
+      {% endblock content %}
+    </div>
+
+    <!-- Custom template | don't include it in your project! -->
+    <!-- <div class="custom-template">
+        <div class="title">Settings</div>
+        <div class="custom-content">
+          <div class="switcher">
+            <div class="switch-block">
+              <h4>Logo Header</h4>
+              <div class="btnSwitch">
+                <button
+                  type="button"
+                  class="selected changeLogoHeaderColor"
+                  data-color="dark"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="blue"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="purple"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="light-blue"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="green"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="orange"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="red"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="white"
+                ></button>
+                <br />
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="dark2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="blue2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="purple2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="light-blue2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="green2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="orange2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeLogoHeaderColor"
+                  data-color="red2"
+                ></button>
+              </div>
+            </div>
+            <div class="switch-block">
+              <h4>Navbar Header</h4>
+              <div class="btnSwitch">
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="dark"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="blue"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="purple"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="light-blue"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="green"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="orange"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="red"
+                ></button>
+                <button
+                  type="button"
+                  class="selected changeTopBarColor"
+                  data-color="white"
+                ></button>
+                <br />
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="dark2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="blue2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="purple2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="light-blue2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="green2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="orange2"
+                ></button>
+                <button
+                  type="button"
+                  class="changeTopBarColor"
+                  data-color="red2"
+                ></button>
+              </div>
+            </div>
+            <div class="switch-block">
+              <h4>Sidebar</h4>
+              <div class="btnSwitch">
+                <button
+                  type="button"
+                  class="changeSideBarColor"
+                  data-color="white"
+                ></button>
+                <button
+                  type="button"
+                  class="selected changeSideBarColor"
+                  data-color="dark"
+                ></button>
+                <button
+                  type="button"
+                  class="changeSideBarColor"
+                  data-color="dark2"
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="custom-toggle">
+          <i class="icon-settings"></i>
+        </div>
+      </div> -->
+    <!-- End Custom template -->
+  </div>
+  <!--   Core JS Files   -->
+  <script src="{% static 'Admin/assets/js/core/jquery-3.7.1.min.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/core/popper.min.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/core/bootstrap.min.js' %}"></script>
+
+  <!-- jQuery Scrollbar -->
+  <script src="{% static 'Admin/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+  <!-- Chart JS -->
+  <script src="{% static 'Admin/assets/js/plugin/chart.js/chart.min.js' %}"></script>
+
+  <!-- jQuery Sparkline -->
+  <script src="{% static 'Admin/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+  <!-- Chart Circle -->
+  <script src="{% static 'Admin/assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+  <!-- Datatables -->
+  <script src="{% static 'Admin/assets/js/plugin/datatables/datatables.min.js' %}"></script>
+
+  <!-- Bootstrap Notify -->
+  <script src="{% static 'Admin/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+  <!-- jQuery Vector Maps -->
+  <script src="{% static 'Admin/assets/js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/plugin/jsvectormap/world.js' %}"></script>
+
+  <!-- Sweet Alert -->
+  <script src="{% static 'Admin/assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+  <!-- Kaiadmin JS -->
+  <script src="{% static 'Admin/assets/js/kaiadmin.min.js' %}"></script>
+
+  <!-- Kaiadmin DEMO methods, don't include it in your project!
+  <script src="{% static 'Admin/assets/js/setting-demo.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/demo.js' %}"></script>
+  <script>
+    $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+      type: "line",
+      height: "70",
+      width: "100%",
+      lineWidth: "2",
+      lineColor: "#177dff",
+      fillColor: "rgba(23, 125, 255, 0.14)",
+    });
+
+    $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+      type: "line",
+      height: "70",
+      width: "100%",
+      lineWidth: "2",
+      lineColor: "#f3545d",
+      fillColor: "rgba(243, 84, 93, .14)",
+    });
+
+    $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+      type: "line",
+      height: "70",
+      width: "100%",
+      lineWidth: "2",
+      lineColor: "#ffa534",
+      fillColor: "rgba(255, 165, 52, .14)",
+    });
+  </script> -->
+</body>
+
+</html>

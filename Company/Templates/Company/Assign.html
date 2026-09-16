@@ -1,0 +1,200 @@
+{% extends 'Company/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --card-shadow: 0 18px 50px rgba(15, 23, 42, .08);
+    }
+
+    body {
+        background: linear-gradient(135deg, rgba(255, 246, 230, 0.4) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    /* WRAPPER */
+
+    .assign-wrapper {
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    /* PAGE TITLE */
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 30px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3);
+    }
+
+    /* CARD */
+
+    .assign-card {
+        width: 500px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: var(--card-shadow);
+        padding: 35px 40px;
+        position: relative;
+    }
+
+    /* BACK LINK */
+
+    .back-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+
+    .back-link:hover {
+        color: var(--serviquo-gold);
+    }
+
+    /* FORM GROUP */
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    /* SELECT */
+
+    .custom-select {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: #fafafa;
+        font-size: 14px;
+    }
+
+    .custom-select:focus {
+        outline: none;
+        border-color: var(--serviquo-gold);
+        background: white;
+    }
+
+    /* BUTTON */
+
+    .btn-assign {
+        width: 100%;
+        padding: 12px;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        color: #111;
+        cursor: pointer;
+
+        position: relative;
+        top: 0;
+        box-shadow: 0 4px 0 #a88734;
+        transition: all .1s ease;
+    }
+
+    .btn-assign:active {
+        top: 3px;
+        box-shadow: 0 1px 0 #a88734;
+    }
+</style>
+
+
+<div class="assign-wrapper">
+
+    <div class="assign-card">
+
+        <a href="{% url 'Company:ViewRequest' %}" class="back-link">
+            <i class="fa-solid fa-circle-left"></i>&nbsp; Back
+        </a><br><br>
+
+        <div class="page-title-container">
+            <h2 class="page-title">Technician Assigning</h2>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label class="field-label">Select Technician</label>
+
+                <select name="sel_technician" class="custom-select" required>
+
+                    <option value="">-- Select Technician --</option>
+
+                    {% for t in techniciandata %}
+
+                    {% if t.id in leave_tech_ids %}
+
+                    <option value="{{ t.id }}" disabled>
+                        {{ t.technician_name }} (On Leave)
+                    </option>
+
+                    {% else %}
+
+                    <option value="{{ t.id }}">
+                        {{ t.technician_name }}
+                    </option>
+
+                    {% endif %}
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <button type="submit" name="btn_submit" class="btn-assign">
+                <i class="fas fa-user-plus"></i> Assign Technician
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'Company:ViewRequest' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

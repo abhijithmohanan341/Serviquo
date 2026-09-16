@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviquo | Verify OTP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #2B3643;
+            --primary-navy-dark: #1E2630;
+            --primary-gold: #D29C38;
+            --gold-gradient: linear-gradient(180deg, #DEAA45 0%, #C48E2B 100%);
+            --bg-canvas: #FDFBF6;
+            --card-bg: #ffffff;
+            --text-main: #2B3643;
+            --text-muted: #64748b;
+            --border-color: #E2E8F0;
+            --input-focus: rgba(210, 156, 56, 0.15); 
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes otpPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-canvas);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .login-landscape-card {
+            display: flex;
+            flex-direction: row;
+            background: var(--card-bg);
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 35px rgba(43, 54, 67, 0.08), 0 5px 15px rgba(43, 54, 67, 0.03);
+            width: 100%;
+            max-width: 850px;
+            min-height: 480px;
+            overflow: hidden; 
+            border: 1px solid rgba(210, 156, 56, 0.2);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .brand-panel {
+            flex: 1;
+            background: var(--gold-gradient);
+            color: white;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            text-align: left;
+        }
+
+        .brand-header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: slideInLeft 0.5s ease-out forwards;
+        }
+
+        .brand-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+            font-weight: 500;
+            animation: slideInLeft 0.5s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+
+        .register-prompt {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInUp 0.5s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .form-panel {
+            flex: 1.2; 
+            padding: 3.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #ffffff;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 0.5s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .form-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+            animation: fadeInUp 0.5s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: fadeInUp 0.5s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .otp-wrapper {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            background-color: var(--bg-canvas);
+            color: var(--primary-navy);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            opacity: 0;
+            animation: otpPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Staggered OTP box entry */
+        .otp-input:nth-child(1) { animation-delay: 0.4s; }
+        .otp-input:nth-child(2) { animation-delay: 0.45s; }
+        .otp-input:nth-child(3) { animation-delay: 0.5s; }
+        .otp-input:nth-child(4) { animation-delay: 0.55s; }
+        .otp-input:nth-child(5) { animation-delay: 0.6s; }
+        .otp-input:nth-child(6) { animation-delay: 0.65s; }
+
+        .otp-input:focus {
+            border-color: var(--primary-gold);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px var(--input-focus);
+            transform: translateY(-4px);
+        }
+
+        .otp-input.filled {
+            border-color: var(--primary-navy);
+            background-color: #fff;
+        }
+
+        /* Primary Button Press Effect */
+        .btn-primary {
+            width: 100%;
+            padding: 1.1rem;
+            background: var(--primary-navy);
+            color: #ffffff;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(43, 54, 67, 0.2);
+            animation: fadeInUp 0.5s ease-out 0.7s forwards;
+            opacity: 0;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-navy-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(43, 54, 67, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .resend-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            animation: fadeInUp 0.5s ease-out 0.8s forwards;
+            opacity: 0;
+        }
+
+        .resend-link {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        .resend-link:hover {
+            text-decoration: underline;
+        }
+
+        .resend-link:active {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .login-landscape-card { flex-direction: column; max-width: 450px; min-height: auto; }
+            .brand-panel { padding: 2.5rem 2rem; text-align: center; }
+            .form-panel { padding: 2.5rem 1.5rem; }
+            .otp-input { width: 40px; height: 50px; font-size: 1.2rem; }
+            .otp-wrapper { gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-landscape-card">
+        
+        <div class="brand-panel">
+            <div class="brand-header">
+                <h1>Serviquo</h1>
+                <p>One final step to secure your account. Enter the code we sent to your email.</p>
+            </div>
+            
+            <div class="register-prompt"></div>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-title">Enter OTP</div>
+            <p class="form-subtitle">Please enter the 6-digit verification code to proceed.</p>
+            
+            <form action="" method="post" id="otp-form">
+                {% csrf_token %}
+                
+                <label class="form-label">Verification Code</label>
+                <div class="otp-wrapper">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" required>
+                </div>
+
+                <input type="hidden" name="txt_otp" id="final_otp">
+
+                <div class="form-actions">
+                    <button type="submit" name="btn_submit" class="btn-primary">Verify & Continue</button>
+                </div>
+
+                <p class="resend-text">
+                    Didn't receive the code? &nbsp;
+                    <a href="{% url 'Guest:forgotpassword' %}" class="resend-link">Try sending again</a>
+                </p>
+            </form>
+        </div>
+
+    </div>
+
+    {% if msg %}
+    <script>
+        alert("{{msg}}");
+    </script>
+    {% endif %}
+
+    <script>
+        const inputs = document.querySelectorAll('.otp-input');
+        const hiddenInput = document.getElementById('final_otp');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                if (!/^\d$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                if (value) {
+                    input.classList.add('filled');
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+                combineOtp();
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    if (!input.value && index > 0) {
+                        inputs[index - 1].focus();
+                        inputs[index - 1].classList.remove('filled');
+                    } else {
+                        input.classList.remove('filled');
+                    }
+                }
+                combineOtp();
+            });
+
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text').slice(0, 6).split('');
+                pasteData.forEach((char, i) => {
+                    if (inputs[i] && /^\d$/.test(char)) {
+                        inputs[i].value = char;
+                        inputs[i].classList.add('filled');
+                    }
+                });
+                combineOtp();
+                const nextIndex = Math.min(pasteData.length, inputs.length - 1);
+                inputs[nextIndex].focus();
+            });
+        });
+
+        function combineOtp() {
+            let otp = "";
+            inputs.forEach(input => {
+                otp += input.value;
+            });
+            hiddenInput.value = otp;
+        }
+    </script>
+
+</body>
+</html>

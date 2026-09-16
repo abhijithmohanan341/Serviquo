@@ -1,0 +1,265 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 33px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+    /* CENTERED SEARCH AREA */
+    .table-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 25px;
+    }
+
+    /* 🔥 NEW PREMIUM FILTER STYLE */
+    .search-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(8px);
+        padding: 10px 20px;
+        border-radius: 40px;
+        border: 1px solid rgba(198,148,63,0.4);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .search-group:hover {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        border-color: var(--serviquo-gold);
+    }
+
+    .search-group i {
+        color: var(--serviquo-gold);
+        font-size: 14px;
+    }
+
+    #txt_search {
+        border: none;
+        outline: none;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--amazon-blue);
+        background: transparent;
+        width: 280px;
+    }
+
+    #txt_search::placeholder {
+        color: #999;
+        font-weight: 500;
+    }
+
+    /* TABLE STYLING */
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 98%;
+        margin: 0 auto 60px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .pro-table thead tr {
+        background-color: var(--amazon-blue);
+    }
+
+    .pro-table th {
+        padding: 18px 10px;
+        text-align: center; 
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .pro-table td {
+        padding: 18px 10px;
+        text-align: center; 
+        border-bottom: 1px solid #eee;
+        font-size: 13.5px;
+        color: #444;
+    }
+
+    .pro-table tbody tr:hover {
+        background-color: #fffbf5;
+    }
+
+    .shop-logo {
+        width: 65px;
+        height: 65px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+    }
+
+    .info-box-centered {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 5px;
+    }
+
+    .flex-row-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .flex-row-item i {
+        color: var(--amazon-blue);
+        width: 16px;
+        font-size: 12px;
+    }
+
+    .btn-action {
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        border-radius: 15px;
+        padding: 7px 20px;
+        color: #111 !important;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        box-shadow: 0 4px 0 #a88734;
+        position: relative;
+        top: 0;
+    }
+
+    .btn-action:active { 
+        top: 3px;
+        box-shadow: 0 1px 0 #a88734;
+    }
+
+</style>
+
+<br>
+
+<div class="container">
+
+    <div class="page-title-container">
+        <h2 class="page-title">Explore Shops</h2>
+    </div><br>
+
+    <div class="table-controls">
+        <div class="search-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="txt_search" placeholder="Search by shop name, location">
+        </div>
+    </div><br>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table" id="shop_table">
+            <thead>
+                <tr>
+                    <th width="60">SL NO</th>
+                    <th>Shop Details</th>
+                    <th>Logo</th>
+                    <th>Contact Information</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in shopdata %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td style="font-weight:600; font-size:15px;">{{ i.shop_name }}</td>
+                    <td><img src="{{ i.shop_photo.url }}" class="shop-logo"></td>
+                    <td>
+                        <div class="info-box-centered">
+                            <div class="flex-row-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span>{{ i.shop_email }}</span>
+                            </div>
+                            <div class="flex-row-item">
+                                <i class="fa-solid fa-phone"></i>
+                                <span>{{ i.shop_contact }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-size:12px; color:#666; max-width:250px;">
+                        <i class="fa-solid fa-location-dot" style="color:var(--serviquo-gold);"></i>
+                        {{ i.shop_address }}
+                    </td>
+                    <td>
+                        <a href="{% url 'User:ViewProduct' i.id %}" class="btn-action">
+                            <i class="fa-solid fa-bag-shopping"></i> View Products
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding:40px; color:#999;">No shops available at the moment.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div><br>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#txt_search").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#shop_table tbody tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,201 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body{
+    background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+    background-attachment: fixed;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--text-main);
+    margin: 0;
+}
+
+    .container {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .path-nav span.current {
+        color: #7b61ff;
+        font-weight: 800;
+    }
+
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a;
+        position: relative;
+        display: block;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%;
+    }
+
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #1c233a;
+        border-radius: 10px;
+    }
+
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    .form-container {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: #8d94ad;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #f4f6fc;
+        border-radius: 10px;
+        background: #fcfcff;
+        font-size: 14px;
+        color: #1c233a;
+        transition: all 0.3s ease;
+        resize: none;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #7b61ff;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(123, 97, 255, 0.1);
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #7b61ff;
+        background: #eef3ff;
+        color: #7b61ff;
+        font-weight: 800;
+        font-size: 12px;
+        text-transform: uppercase;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        box-shadow: 0 4px 0px #7b61ff;
+        letter-spacing: 1px;
+    }
+
+    .btn-submit:hover {
+        background: #7b61ff;
+        color: #fff;
+    }
+
+    .btn-submit:active {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0px #7b61ff;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: #8d94ad;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        transition: color 0.3s ease;
+    }
+
+    .btn-back i {
+        margin-right: 8px;
+        font-size: 10px;
+    }
+
+    .btn-back:hover {
+        color: #7b61ff;
+    }
+</style>
+
+<div class="container">
+    <div class="page-inner py-5">
+
+        <div class="path-nav">
+            COMPLAINT MANAGEMENT
+            <i class="fas fa-chevron-right" style="font-size:9px;"></i>
+            <span class="current">COMPLAINT REPLY</span>
+        </div>
+
+        <a href="{% url 'Admin:ViewComplaint' %}" class="btn-back">
+            <i class="fas fa-chevron-left"></i> BACK TO COMPLAINTS
+        </a>
+
+        <h4 class="brand-heading">COMPOSE RESOLUTION</h4>
+
+        <div class="form-wrapper">
+            <div class="form-container">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="txt_reply">Reply Message</label>
+                        <textarea 
+                            name="txt_reply" 
+                            id="txt_reply" 
+                            class="form-control" 
+                            rows="6" 
+                            placeholder="Type your official response here..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" name="btn_submit" class="btn-submit">
+                        Send Resolution
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Admin:ViewComplaint' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

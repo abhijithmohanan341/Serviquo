@@ -1,0 +1,249 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 40px;
+        margin-top: 20px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+    /* Form Styling */
+    .form-card {
+        background: #fff;
+        max-width: 500px;
+        margin: 0 auto 50px;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        border: 1px solid #f3f4f6;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .custom-textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #fafafa;
+        resize: none;
+    }
+
+    .btn-submit {
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        border-radius: 20px;
+        padding: 10px 40px;
+        color: #111;
+        font-size: 12px;
+        width: 100% ;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 0 #a88734;
+        position: relative;
+        transition: all 0.1s ease;
+        text-transform: uppercase;
+    }
+
+    .btn-submit:active {
+        top: 3px;
+        box-shadow: 0 1px 0 #a88734;
+    }
+
+    /* Compact Table Styling */
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1.5px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        max-width: 850px;
+        margin: 0 auto 60px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* Forces columns to stay under headers */
+    }
+
+    .pro-table thead tr {
+        background-color: var(--amazon-blue);
+    }
+
+    .pro-table th {
+        padding: 12px 5px;
+        text-align: center; 
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    .pro-table td {
+        padding: 12px 8px;
+        text-align: center; /* Centers details under header */
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+        color: #444;
+        word-wrap: break-word; /* Prevents overflow */
+    }
+
+    .feedback-content-cell {
+        font-size: 11.5px;
+        color: #555;
+        line-height: 1.4;
+    }
+
+    /* Action Buttons */
+    .action-container {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-mgmt {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        text-decoration: none !important;
+        transition: all 0.1s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .btn-edit-pro {
+        background: #e3f2fd;
+        border: 1px solid #90caf9;
+        color: #0d47a1 !important;
+    }
+
+    .btn-delete-pro {
+        background: #ffebee;
+        border: 1px solid #ef9a9a;
+        color: #b71c1c !important;
+    }
+
+    .btn-mgmt:active {
+        transform: translateY(2px);
+    }
+</style>
+
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Post Your Feedback</h2>
+    </div>
+
+    <div class="form-card">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="field-label">Experience Details</label>
+                <textarea name="txt_content" class="custom-textarea" rows="4" required placeholder="Write your feedback here...">{{editdata.feedback_content}}</textarea>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <button type="submit" name="btn_submit" class="btn-submit">
+                    <i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i> Submit Feedback
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="page-title-container">
+        <h2 class="page-title">My Feedback History</h2>
+    </div>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th width="10%">SL NO</th>
+                    <th width="50%">Feedback Details</th>
+                    <th width="20%">Date Posted</th>
+                    <th width="20%">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in feedbackdata %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td class="feedback-content-cell">{{ i.feedback_content }}</td>
+                    <td style="font-size: 11px;">{{ i.feedback_date }}</td>
+                    <td>
+                        <div class="action-container">
+                            <a href="{% url 'User:EditFeedback' i.id %}" class="btn-mgmt btn-edit-pro" title="Edit">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                            <a href="{% url 'User:DeleteFeedback' i.id %}" class="btn-mgmt btn-delete-pro" onclick="return confirm('Delete this feedback?')" title="Delete">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="padding: 30px; color: #999; font-style: italic;">
+                        No feedback recorded yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'User:Feedback' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

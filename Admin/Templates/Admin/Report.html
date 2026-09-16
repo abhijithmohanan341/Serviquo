@@ -1,0 +1,377 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --border: #e2e8f0;
+        --muted: #94a3b8;
+        --dark: #1e293b;
+    }
+
+    body{
+    background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+    background-attachment: fixed;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-main);
+    margin: 0;
+}
+
+    /* HEADER */
+
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .path-nav span.current {
+        color: #7b61ff;
+        font-weight: 800;
+    }
+
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a;
+        position: relative;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #1c233a;
+        border-radius: 10px;
+    }
+
+    /* FILTER PANEL */
+
+    .filter-panel {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        margin-bottom: 30px;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        align-items: end;
+    }
+
+    .input-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-box label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #7b61ff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .input-box input,
+    .input-box select {
+        height: 40px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    /* BUTTON PRESS EFFECT */
+
+    .btn-generate {
+        height: 40px;
+        background: #1c233a;
+        color: #ffffff;
+        border: none;
+        padding: 0 20px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0 4px 0 #0f172a;
+        position: relative;
+        top: 0;
+        transition: all .1s ease;
+    }
+
+    .btn-generate:active {
+        top: 3px;
+        box-shadow: 0 1px 0 #0f172a;
+    }
+
+    /* TABLE CARD */
+
+    .data-card {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .summary-strip {
+        background: #f1f5f9;
+        padding: 12px 25px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    /* TABLE */
+
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .main-table th,
+    .main-table td {
+        padding: 15px 12px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        border-right: 1px solid #edf2f7;
+    }
+
+    .main-table th {
+        background: #f8fafc;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    .main-table th:last-child,
+    .main-table td:last-child {
+        border-right: none;
+    }
+
+    .main-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    /* TOTAL */
+
+    .total-section {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 30px;
+        background: #f8fafc;
+        white-space: nowrap;
+    }
+
+    .total-label {
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .total-amount {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 28px;
+    }
+</style>
+
+<div class="container">
+    <div class="page-inner py-5">
+
+    <div class="path-nav">
+        ADMIN MANAGEMENT
+        <i class="fas fa-chevron-right" style="font-size:9px;"></i>
+        <span class="current">REVENUE REPORT</span>
+    </div>
+
+    <h4 class="brand-heading">ADMIN REVENUE REPORT</h4>
+
+    <br>
+
+    <!-- FILTER FORM -->
+
+    <div class="filter-panel">
+
+        <form method="GET">
+
+            <div class="filter-row">
+
+                <div class="input-box">
+                    <label>Report Type</label>
+
+                    <select name="type" required>
+
+                        <option value="all" {% if type == "all" %} selected {% endif %}>
+                            All Records
+                        </option>
+
+                        <option value="company" {% if type == "company" %} selected {% endif %}>
+                            Company Services
+                        </option>
+
+                        <option value="booking" {% if type == "booking" %} selected {% endif %}>
+                            Shop Record
+                        </option>
+
+                        <option value="service" {% if type == "service" %} selected {% endif %}>
+                            Service Request
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label>From Date</label>
+                    <input type="date" name="from_date" value="{{ from_date }}">
+                </div>
+
+                <div class="input-box">
+                    <label>To Date</label>
+                    <input type="date" name="to_date" value="{{ to_date }}">
+                </div>
+
+                <button type="submit" class="btn-generate">
+                    View Report
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- REPORT TABLE -->
+
+    <div class="data-card">
+
+        <div class="summary-strip">
+            Total Requests : {{ total_count }}
+        </div>
+
+        <table class="main-table">
+
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>User Name</th>
+                    <th>Provider Name</th>
+                    <th>Service Type</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for i in data %}
+
+                <tr>
+
+                    <td>{{ forloop.counter }}</td>
+
+                    <td>{{ i.user.user_name }}</td>
+
+                    <td>
+                        {% if i.company %}
+                            {{ i.company.company_name }}
+
+                        {% elif i.serviceprovider %}
+                            {{ i.serviceprovider.serviceprovider_name }}
+
+                        {% else %}
+                            {% with i.tbl_cart_set.first as cart %}
+                                {% if cart %}
+                                    {{ cart.product.shop.shop_name }}
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if i.booking_amount %}
+                            Product Purchase
+                        {% elif i.companyservice_amount %}
+                            Company Service
+                        {% elif i.servicerequest_amount %}
+                            Home Service
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if i.booking_date %}
+                            {% if i.booking_date|date:"H:i" == "00:00" %}
+                                {{ i.booking_date|date:"F d, Y" }}
+                            {% else %}
+                                {{ i.booking_date|date:"F d, Y, g:i a" }}
+                             {% endif %}
+                        {% elif i.companyservice_date %}
+                            {{ i.companyservice_date }}
+                        {% elif i.servicerequest_date %}
+                            {{ i.servicerequest_date }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if i.booking_amount %}
+                            ₹ {{ i.booking_amount }}
+                        {% elif i.companyservice_amount %}
+                            ₹ {{ i.companyservice_amount }}
+                        {% elif i.servicerequest_amount %}
+                            ₹ {{ i.servicerequest_amount }}
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="6" style="padding:60px;color:#94a3b8">
+                        NO RECORDS FOUND
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="total-section">
+
+            <div class="total-label">
+                TOTAL REVENUE
+            </div>
+
+            <div class="total-amount">
+                ₹ {{ total_amount }}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviquo | Secure Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #2B3643;
+            --primary-navy-dark: #1E2630;
+            --primary-gold: #D29C38;
+            --gold-gradient: linear-gradient(180deg, #DEAA45 0%, #C48E2B 100%);
+            --gold-hover: #B58220;
+            --bg-canvas: #FDFBF6;
+            --card-bg: #ffffff;
+            --text-main: #2B3643;
+            --text-muted: #64748b;
+            --border-color: #E2E8F0;
+            --input-focus: rgba(210, 156, 56, 0.15);
+        }
+
+        /* Entry Animations */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-canvas);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .login-landscape-card {
+            display: flex;
+            flex-direction: row;
+            background: var(--card-bg);
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 35px rgba(43, 54, 67, 0.08), 0 5px 15px rgba(43, 54, 67, 0.03);
+            width: 100%;
+            max-width: 850px;
+            min-height: 450px;
+            overflow: hidden;
+            border: 1px solid rgba(210, 156, 56, 0.2);
+            animation: slideUpFade 0.6s ease-out;
+        }
+
+        /* Left Panel */
+        .brand-panel {
+            flex: 1;
+            background: var(--gold-gradient);
+            color: white;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+        }
+
+        .brand-header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0 0 0.5rem 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: slideRight 0.5s ease-out forwards;
+            padding-bottom: 5px;
+        }
+
+        .brand-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+            font-weight: 500;
+            animation: slideRight 0.5s ease-out 0.1s forwards;
+            opacity: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .register-prompt {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            animation: slideUpFade 0.5s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .register-prompt p {
+            color: #ffffff;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Ghost Button Effect */
+        .btn-ghost {
+            display: inline-block;
+            width: 100%;
+            padding: 0.85rem;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-ghost:hover {
+            background: #ffffff;
+            color: var(--primary-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost:active {
+            transform: translateY(0) scale(0.97);
+            /* Press effect */
+        }
+
+        /* Right Panel */
+        .form-panel {
+            flex: 1.2;
+            padding: 3.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #ffffff;
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: rgba(10, 10, 10, 0.4);
+            margin-bottom: 2rem;
+            animation: slideUpFade 0.5s ease-out 0.2s forwards;
+            font-family: 'Inter', 'Manrope', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            margin-bottom: 1.5rem;
+            animation: slideUpFade 0.5s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-main);
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background-color: var(--bg-canvas);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 4px var(--input-focus);
+            background-color: #ffffff;
+            transform: scale(1.01);
+        }
+
+        .form-actions {
+            margin-top: 1.5rem;
+            animation: slideUpFade 0.5s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        /* Primary Button Effect */
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-navy);
+            color: #ffffff;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(43, 54, 67, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-navy-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(43, 54, 67, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.97);
+            /* Press effect */
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--primary-gold);
+            text-decoration: underline;
+        }
+
+        .forgot-link:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .login-landscape-card {
+                flex-direction: column;
+                max-width: 450px;
+            }
+
+            .brand-panel {
+                padding: 2.5rem 2rem;
+                text-align: center;
+            }
+
+            .form-panel {
+                padding: 2.5rem 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-landscape-card">
+
+        <div class="brand-panel">
+            <div class="brand-header">
+                <h1>Serviquo</h1>
+                <p>Securely log in to manage your home and appliance service requests.</p>
+            </div>
+
+            <div class="register-prompt">
+                <p>New to Serviquo?</p>
+                <a href="{% url 'Guest:allregistrations' %}" class="btn-ghost">Create an Account</a>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-title">Log into Serviquo</div>
+
+            <form action="" method="post">
+                {% csrf_token %}
+
+                <div class="input-wrapper">
+                    <label class="form-label" for="txt_email">Email Address</label>
+                    <input type="email" name="txt_email" class="form-input" id="txt_email" required
+                        placeholder="name@example.com">
+                </div>
+
+                <div class="input-wrapper">
+                    <label class="form-label" for="txt_password">Password</label>
+                    <input type="password" name="txt_password" class="form-input" id="txt_password" required
+                        placeholder="Enter your password">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" name="btn_submit" class="btn-primary">SIGN IN</button>
+                    <a href="{% url 'Guest:forgotpassword' %}" class="forgot-link">Forgot password ?</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'Guest:Login' %}";
+</script>
+{% endif %}

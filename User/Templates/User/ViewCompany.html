@@ -1,0 +1,315 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* SESSION 1: HEADING */
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 30px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3);
+    }
+
+    /* CONTROL BAR (Everything Moved to Left) */
+
+    .table-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 98%;
+        margin: 0 auto 20px;
+        gap: 10px;
+        /* Gap between search and dropdown */
+    }
+
+    .table-group:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        border-color: var(--serviquo-gold);
+    }
+
+    .search-group,
+    .filter-group {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        padding: 6px 18px;
+        border-radius: 50px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .control-icon {
+        color: #94a3b8;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    #txt_search,
+    #sel_brand {
+        border: none;
+        outline: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--amazon-blue);
+        background: transparent;
+    }
+
+
+
+    #txt_search {
+        width: 200px;
+        padding: 6px 0;
+    }
+
+    #sel_brand {
+        width: 200px;
+        cursor: pointer;
+        padding: 6px 0;
+    }
+
+    .control-label {
+        font-size: 10px;
+        font-weight: 800;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-right: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    /* SESSION 3: TABLE SESSION */
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 98%;
+        margin: 0 auto 60px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .pro-table thead tr {
+        background-color: var(--amazon-blue);
+    }
+
+    .pro-table th {
+        padding: 18px 10px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .pro-table td {
+        padding: 18px 10px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 13.5px;
+        color: #444;
+    }
+
+    .pro-table tbody tr:hover {
+        background-color: #fffbf5;
+    }
+
+    .logo-box img {
+        max-width: 60px;
+        max-height: 40px;
+        object-fit: contain;
+    }
+
+    .info-box-centered {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .flex-row-item {
+        display: grid;
+        grid-template-columns: 20px auto;
+        /* fixed icon width */
+        align-items: center;
+        column-gap: 10px;
+    }
+
+    .flex-row-item i {
+        color: var(--amazon-blue);
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .flex-row-item span {
+        font-size: 13px;
+        color: #334155;
+        word-break: break-word;
+    }
+
+    /* 3D Press Effect Button */
+    .btn-action {
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        border-radius: 15px;
+        padding: 7px 20px;
+        color: #111 !important;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        box-shadow: 0 4px 0 #a88734;
+        position: relative;
+        top: 0;
+    }
+
+    .btn-action:hover {
+        background: #f4d078;
+    }
+
+    .btn-action:active {
+        top: 3px;
+        box-shadow: 0 1px 0 #a88734;
+    }
+</style>
+<br>
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Explore Companies</h2>
+    </div><br>
+
+    <div class="table-controls">
+        <div class="filter-group">
+            <span class="control-label"><i class="fa-solid fa-filter"></i>&nbsp;&nbsp;Select Brand</span>
+            <form action="" method="post" style="margin:0;">
+                {% csrf_token %}
+                <select id="sel_brand" name="sel_brand">
+                    <option value="">All Registered Brands</option>
+                    {% for b in branddata %}
+                    <option value="{{ b.id }}">{{ b.brand_name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div><br>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table" id="company_result">
+            <thead>
+                <tr>
+                    <th width="60">SL NO</th>
+                    <th>Company Name</th>
+                    <th>Logo</th>
+                    <th>Brand Type</th>
+                    <th>Contact Info</th>
+                    <th>Location Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in companydata %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td style="font-weight: 600; color: #111;">{{ i.company_name }}</td>
+                    <td>
+                        <div class="logo-box">
+                            <img src="{{ i.company_logo.url }}" alt="Logo">
+                        </div>
+                    </td>
+                    <td><span
+                            style="color:var(--serviquo-gold); font-weight:700; font-size:11px; text-transform:uppercase;">{{i.brand.brand_name }}</span></td>
+                    <td>
+                        <div class="info-box-centered">
+                            <div class="flex-row-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span>{{ i.company_email }}</span>
+                            </div>
+                            <div class="flex-row-item">
+                                <i class="fa-solid fa-phone"></i>
+                                <span>{{ i.company_contact }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-size: 11px; color: var(--text-muted); max-width: 250px;">
+                        {{ i.company_address|linebreaksbr }}
+                    </td>
+                    <td>
+                        <a href="{% url 'User:CompanyRequest' i.id %}" class="btn-action">
+                            <i class="fa-solid fa-paper-plane"></i> Send Request
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div><br>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    // AJAX Brand Filter
+    $("#sel_brand").change(function () {
+        var bid = $(this).val();
+        $.ajax({
+            url: "{% url 'User:ajaxCompanyBrand' %}",
+            data: { bid: bid },
+            success: function (data) {
+                $("#company_result tbody").html(data);
+            }
+        });
+    });
+
+    // Real-time Search Filter
+    $(document).ready(function () {
+        $("#txt_search").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#company_result tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+{% endblock content %}

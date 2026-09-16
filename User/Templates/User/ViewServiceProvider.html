@@ -1,0 +1,346 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, rgba(255, 246, 230, 0.4) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Session Spacing */
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+    .filter-section {
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .filter-label {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+    }
+
+    .filter-bar-selects {
+        display: flex;
+        gap: 15px;
+    }
+
+    .filter-bar-selects select {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        min-width: 220px;
+        font-size: 14px;
+        outline-color: var(--serviquo-gold);
+        background: #fff;
+    }
+
+    /* Table with Dark Border and Dark Header */
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 98%;
+        margin: 0 auto;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .pro-table thead tr {
+        background-color: var(--amazon-blue);
+    }
+
+    .pro-table th {
+        padding: 18px 10px;
+        text-align: center; 
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .pro-table td {
+        padding: 25px 10px;
+        text-align: center; 
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 13.5px;
+        color: #444;
+    }
+
+    .pro-table tbody tr:hover {
+        background-color: #fffbf5;
+    }
+
+    /* CENTERING & SHIFTING LOGIC */
+    .cell-center-wrapper {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .info-box-shifted {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 6px;
+        padding-left: 60px; /* Shifts details right to center under heading */
+    }
+
+    .flex-row-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        line-height: 1.2;
+    }
+
+    .flex-row-item i {
+        color: var(--amazon-blue);
+        width: 16px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    /* Expertise Pill Design */
+    .expertise-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .expertise-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 190px; 
+        padding: 8px 12px;
+        background: #f9f9f9;
+        color: var(--amazon-blue);
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+    }
+
+    .expertise-pill::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--serviquo-gold);
+    }
+
+    .profile-img {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--serviquo-gold);
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* 3D Press Effect Button */
+    .btn-action {
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        border-radius: 15px;
+        padding: 8px 22px;
+        color: #111 !important;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.1s ease; 
+        box-shadow: 0 4px 0 #a88734;  
+        position: relative;
+        top: 0;
+    }
+
+    .btn-action:hover { background: #f4d078; }
+    .btn-action:active { 
+        top: 3px;
+        box-shadow: 0 1px 0 #a88734;
+    }
+</style>
+<br>
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Explore Service Providers</h2>
+    </div>
+
+    <div class="filter-section">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="filter-bar-selects">
+                <div class="filter-group">
+                    <span class="filter-label">Service</span>
+                    <select id="sel_service" name="sel_service">
+                        <option value="">All Services</option>
+                        {% for c in servicetype %}
+                        <option value="{{ c.id }}">{{ c.servicetype_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">District</span>
+                    <select name="sel_district" id="sel_district">
+                        <option value="">District</option>
+                        {% for i in district %}
+                        <option value="{{i.id}}">{{i.district_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Place</span>
+                    <select name="sel_place" id="sel_place">
+                        <option value="">Place</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table" id="result">
+            <thead>
+                <tr>
+                    <th width="60">SL NO</th>
+                    <th>Name</th>
+                    <th>Profile</th>
+                    <th>Contact & Address</th>
+                    <th>Expertise</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in serviceproviderdata %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td style="font-weight: 600;">{{i.serviceprovider_name}}</td>
+                    <td><img src="{{i.serviceprovider_photo.url}}" class="profile-img"></td>
+                    <td>
+                        <div class="cell-center-wrapper">
+                            <div class="info-box-shifted">
+                                <div class="flex-row-item"><i class="fa-solid fa-user-tie"></i><span>Experience : {{i.experience.experience_range}}</span></div>
+                                <div class="flex-row-item"><i class="fa-solid fa-envelope"></i><span>{{i.serviceprovider_email}}</span></div>
+                                <div class="flex-row-item"><i class="fa-solid fa-phone"></i><span>{{i.serviceprovider_contact}}</span></div>
+                                <div class="flex-row-item"><i class="fa-solid fa-location-dot"></i><span style="max-width: 180px;">{{i.serviceprovider_address}}</span></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="expertise-list">
+                            {% for serviceprovider in i.tbl_serviceproviderstype_set.all %}
+                            <div class="expertise-pill">{{ serviceprovider.servicetype.servicetype_name }}</div>
+                            {% empty %}
+                            No Service type added
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="cell-center-wrapper">
+                            <div class="info-box-shifted" style="padding-left: 0;">
+                                <div class="flex-row-item"><i class="fa-solid fa-city" style="color:var(--serviquo-gold)"></i><span style="font-weight:700;">{{i.place.district.district_name}}</span></div>
+                                <div class="flex-row-item"><i class="fa-solid fa-location-dot" style="color:var(--serviquo-gold)"></i><span>{{i.place.place_name}}</span></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{% url 'User:ServiceProviderRequest' i.id %}" class="btn-action">
+                            <i class="fa-solid fa-paper-plane"></i> Send Request
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div><br><br><br>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    // Load Place based on District selection
+    $("#sel_district").change(function () {
+        var did = $(this).val();
+        $.ajax({
+            url: "{% url 'Guest:ajaxplace' %}",
+            data: { did: did },
+            success: function (data) { $("#sel_place").html(data); }
+        });
+    });
+
+    // Main Filter Function
+    function loadServiceProvider() {
+        var pid = $("#sel_place").val();
+        var sid = $("#sel_service").val();
+        $.ajax({
+            url: "{% url 'User:ajaxService' %}",
+            data: { pid: pid, sid: sid },
+            success: function(data) { $("#result tbody").html(data); }
+        });
+    }
+    $("#sel_place, #sel_service").change(loadServiceProvider);
+</script> 
+
+{% endblock content %}

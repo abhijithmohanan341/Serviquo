@@ -1,0 +1,151 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .path-nav span.current {
+        color: #7b61ff;
+        font-weight: 800;
+    }
+
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a;
+        position: relative;
+        display: block;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%;
+    }
+
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #1c233a;
+        border-radius: 10px;
+    }
+
+    /* TABLE STYLE */
+    .table-modern {
+        width: 95%;
+        margin: 20px auto;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+        table-layout: fixed; 
+    }
+
+   
+    .col-sl { 
+        width: 60px; 
+    }
+
+    .table-modern thead th,
+    .table-modern tbody td {
+        text-align: center; 
+        vertical-align: middle;
+    }
+
+    .table-modern thead th {
+        color: #8d94ad;
+        font-size: 11px;
+        text-transform: uppercase;
+        padding: 12px 10px;
+        letter-spacing: 1px;
+    }
+
+    .table-modern tbody tr {
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: 0.3s ease;
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: #fcfcff;
+        box-shadow: 0 6px 18px rgba(123,97,255,0.15);
+    }
+
+    .table-modern td {
+        padding: 15px 10px;
+        font-size: 13px;
+        word-wrap: break-word;
+        color: #444;
+    }
+
+   
+    .table-modern tbody td {
+        border-top: 1px solid rgba(0,0,0,0.01);
+        border-bottom: 1px solid rgba(0,0,0,0.01);
+    }
+</style>
+
+<div class="container">
+    <div class="page-inner py-5">
+
+        <div class="path-nav">
+            COMMUNITY MANAGEMENT
+            <i class="fas fa-chevron-right" style="font-size:9px;"></i>
+            <span class="current">USER FEEDBACK</span>
+        </div>
+
+        <h4 class="brand-heading">FEEDBACK DIRECTORY</h4>
+
+        <div class="table-responsive">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th class="col-sl">SL NO</th>
+                        <th>USER NAME</th>
+                        <th>CONTENT</th>
+                        <th>DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in feedbackdata %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td style="font-weight: 600;">{{ i.user.user_name }}</td>
+                        <td>{{ i.feedback_content }}</td>
+                        <td style="color: #8d94ad;">{{ i.feedback_date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding: 40px; color: #8d94ad;">No feedbacks available at this time</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

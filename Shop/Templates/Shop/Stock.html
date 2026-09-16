@@ -1,0 +1,234 @@
+{% extends 'Shop/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root {
+    --accent-gold: #c6943f;
+    --accent-dark: #1a1a1a;
+    --text-soft: #5f6368;
+    --border-light: rgba(198, 148, 63, 0.15);
+    --card-unified-bg: rgba(255, 255, 255, 0.5); 
+    --partition-line: rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+    background-attachment: fixed;
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-dark);
+    margin: 0;
+}
+
+.stock-wrapper {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 30px;
+}
+
+.page-title-container { 
+    text-align: center; 
+    margin-bottom: 40px; 
+}
+
+.page-title {
+    font-family: "Times New Roman", Times, serif;
+    font-weight: 400; 
+    font-size: 30px; 
+    color: #111;
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    display: inline-block; 
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+}
+
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--accent-gold);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+.back-link:hover { transform: translateX(-5px); }
+.back-link:active { transform: translateX(-5px) scale(0.95); } /* Press Effect */
+
+
+.stock-form-card {
+    background: var(--card-unified-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    max-width: 500px;
+    margin: 0 auto 50px;
+}
+
+.input-row { margin-bottom: 22px; }
+.input-row label {
+    display: block; font-size: 11px; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; color: var(--text-soft);
+}
+
+.input-row input {
+    width: 100%; padding: 12px 0;
+    border: none; border-bottom: 1.5px solid #eee;
+    font-family: inherit; background: transparent;
+    transition: 0.3s; font-size: 15px;
+    outline: none;
+}
+
+.input-row input:hover { border-bottom-color: #ccc; }
+.input-row input:focus {
+    border-bottom-color: var(--accent-gold);
+}
+
+.btn-premium {
+    width: 100%; background: var(--accent-dark); color: white;
+    padding: 16px; border: none; text-transform: uppercase;
+    font-size: 12px; letter-spacing: 2px; font-weight: 600;
+    cursor: pointer; transition: 0.2s;
+    border-radius: 4px;
+}
+.btn-premium:hover { background: #333; }
+.btn-premium:active { transform: scale(0.97); } /* Press Effect */
+
+
+.content-area {
+    background: var(--card-unified-bg);
+    backdrop-filter: blur(10px);
+    padding: 30px; border-radius: 8px;
+    border: 1px solid white;
+}
+
+.premium-table {
+    width: 100%; border-collapse: collapse;
+}
+
+.premium-table th {
+    text-align: center;
+    padding: 18px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-soft);
+    border-bottom: 1px solid var(--accent-dark);
+}
+
+.premium-table td {
+    padding: 20px 10px;
+    border-bottom: 1px solid var(--partition-line);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.prod-thumb {
+    width: 50px; height: 65px; object-fit: cover;
+    border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.qty-val {
+    font-family: 'Times New Roman', Times, serif; 
+    font-weight: 700; 
+    font-size: 18px; 
+    color: var(--accent-dark);
+}
+
+.btn-delete {
+    display: inline-block;
+    color: #cf1322;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid #ffa39e;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: #fff1f0;
+    transition: 0.2s;
+}
+.btn-delete:hover { background: #cf1322; color: white; }
+.btn-delete:active { transform: scale(0.92); } /* Press Effect */
+
+</style>
+
+<div class="stock-wrapper">
+    
+    <a href="{% url 'Shop:AddProduct' %}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Back to Products
+    </a>
+
+    <div class="page-title-container">
+        <h2 class="page-title">Product Stock Update</h2>
+    </div>
+
+    <div class="stock-form-card">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="input-row">
+                <label><i class="fa-solid fa-boxes-stacked" style="color: var(--accent-gold); margin-right: 8px;"></i>Add Quantity </label>
+                <input type="number" name="txt_qty" id="txt_qty" required placeholder="Add Stock Qty">
+            </div>
+            <button type="submit" name="btn_submit" class="btn-premium">
+                Update Stock Levels
+            </button>
+        </form>
+    </div><br>
+
+    <div class="page-title-container">
+        <h2 class="page-title" style="font-size: 30px;">Stock History</h2>
+    </div>
+
+    <main class="content-area">
+        <table class="premium-table">
+            <thead>
+                <tr>
+                    <th>SL NO</th>
+                    <th>Product Identity</th>
+                    <th>Visual</th>
+                    <th>Added Qty</th>
+                    <th>Remaining Qty</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in stockdata %}
+                <tr>
+                    <td style="color: var(--text-soft); font-weight: 600;">{{forloop.counter}}</td>
+                    <td style="font-weight: 700; font-size: 14px;">{{i.product.product_name}}</td>
+                    <td><img src="{{i.product.product_photo.url}}" class="prod-thumb"></td>
+                    <td class="qty-val">{{i.stock_Qty}}</td>
+                    <td class="qty-val" style="color: var(--accent-gold);">{{i.total_stock }}</td>
+                    <td>
+                        <a href="{% url 'Shop:deleteStock' i.id aid %}" class="btn-delete" onclick="return confirm('Delete this stock record?')">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Shop:AddStock' aid %}";
+</script>
+{% endif %}
+
+{% endblock content %}

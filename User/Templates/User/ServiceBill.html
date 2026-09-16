@@ -1,0 +1,359 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* --- CSS Variables --- */
+    :root {
+        --invoice-navy: #0f172a;
+        --invoice-accent: #c6943f;
+        --invoice-text: #334155;
+        --invoice-bg: rgba(255, 246, 230, 0.4); 
+        --border-color: #e2e8f0;
+    }
+
+    /* --- Page Layout & Background --- */
+    body {
+        background: linear-gradient(135deg, var(--invoice-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: 'Inter', sans-serif;
+        color: var(--invoice-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* --- Heading Style --- */
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 30px;
+        margin-top: 40px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 36px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.4); 
+    }
+
+    /* --- The Bill Card --- */
+    .bill-card {
+        max-width: 800px;
+        margin: 0 auto 60px;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Top Navy Accent Strip */
+    .bill-card::before {
+        content: "";
+        display: block;
+        height: 6px;
+        background: var(--invoice-navy);
+    }
+
+    .bill-padding {
+        padding: 60px;
+    }
+
+    /* --- Header Section --- */
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 50px;
+    }
+
+    .company-logo-side h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        color: var(--invoice-navy);
+        margin: 0;
+    }
+
+    .company-details {
+        font-size: 13px;
+        line-height: 1;
+        margin-top: 5px;
+        color: #64748b;
+    }
+
+    .invoice-meta-side {
+        text-align: right;
+    }
+
+    .invoice-meta-side h1 {
+        font-size: 40px;
+        font-weight: 700;
+        color: #f1f5f9; 
+        margin: 0;
+        line-height: 1;
+        letter-spacing: 2px;
+    }
+
+    .meta-data {
+        margin-top: -15px;
+        font-size: 14px;
+    }
+
+    /* Professional Alignment for Meta Items */
+    .meta-data-box {
+        display: inline-block;
+        text-align: left;
+    }
+    .meta-item {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+    .meta-label { width: 100px; color: #64748b; }
+    .meta-value { font-weight: 700; color: var(--invoice-navy); }
+
+    /* --- Grid Layout --- */
+    .bill-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 30px;
+    }
+
+    .address-group h6 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--invoice-accent);
+        margin: 0 0 10px 0;
+    }
+
+    .address-group p {
+        font-size: 14px;
+        margin: 2px 0;
+        line-height: 1.5;
+    }
+
+    /* --- Table --- */
+    .service-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+    }
+
+    .service-table th {
+        text-align: left;
+        background: #f8fafc;
+        padding: 12px 15px;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--invoice-navy);
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .service-table td {
+        padding: 20px 15px;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 14px;
+    }
+
+    /* --- Summary Area --- */
+    .summary-wrapper {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .summary-table {
+        width: 280px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+    }
+
+    .grand-total-row {
+        border-top: 2px solid var(--invoice-navy);
+        margin-top: 10px;
+        padding-top: 15px;
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--invoice-navy);
+    }
+
+    /* --- Action Footer Bar --- */
+    .action-bar {
+        background: #f8fafc;
+        padding: 25px 60px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn {
+        text-decoration: none;
+        padding: 12px 26px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-back { background: #fff; color: var(--invoice-text); border: 1px solid var(--border-color); }
+    .btn-print { background: var(--invoice-navy); color: #fff; border: none; box-shadow: 0 4px 12px rgba(15,23,42,0.2); }
+
+    @media print {
+        body { background: #fff !important; }
+        body * { visibility: hidden; }
+        .bill-card, .bill-card * { visibility: visible; }
+        .bill-card { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
+        .page-title-container, .action-bar { display: none !important; }
+    }
+</style>
+
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Service Request INVOICE</h2>
+    </div><br>
+
+    <div class="bill-card">
+        <div class="bill-padding">
+            
+            <div class="invoice-header">
+                <div class="company-logo-side">
+                    <h2><i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i>&nbsp;{{ providerdata.serviceprovider_name }}</h2><br>
+                    <div class="company-details">
+                        <p><i class="fa fa-envelope"></i> {{ providerdata.serviceprovider_email }}</p>
+                        <p><i class="fa fa-phone"></i> {{ providerdata.serviceprovider_contact }}</p>
+                        <p><i class="fa fa-map-marker-alt"></i> {{ providerdata.serviceprovider_address }}</p>
+                    </div>
+                </div>
+                <div class="invoice-meta-side">
+                    <h1>SERVIQUO</h1>
+                    <div class="meta-data-box"><br><br>
+                        <div class="meta-item">
+                            <span class="meta-label">Request ID</span>
+                            <span class="meta-value">:  {{ requestdata.id }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Date</span>
+                            <span class="meta-value">: {{ requestdata.servicerequest_date }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Due Date</span>
+                            <span class="meta-value">: {{ requestdata.servicerequest_todate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bill-grid">
+                <div class="address-group">
+                    <h6>Billed To</h6>
+                    <p><strong>{{ userdata.user_name }}</strong></p>
+                    <p>{{ userdata.user_email }}</p>
+                    <p>{{ userdata.user_contact }}</p>
+                    <p>{{ userdata.user_address }}</p>
+                </div>
+                <div class="address-group">
+                    <h6>Payment Status</h6>
+                    <p style="color: #16a34a; font-weight: 700; font-size: 16px;">
+                        <i class="fa fa-check-circle"></i> COMPLETED
+                    </p>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 5px;">Transaction processed via Serviquo Secure</p>
+                </div>
+            </div>
+
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">Service Description</th>
+                        <th style="text-align: right; width: 30%;">Amount (INR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p style="font-weight: 600; margin: 0; color: var(--invoice-navy);">{{ requestdata.servicetype.servicetype_name }}</p>
+                            <p style="font-size: 13px; color: #64748b; margin-top: 5px;">{{ requestdata.servicerequest_content }}</p>
+                            {% if requestdata.servicerequest_remark %}
+                                <p style="font-size: 12px; color: var(--invoice-accent); margin-top: 8px; font-style: italic;">
+                                    <i class="fa fa-info-circle"></i> Remark: {{ requestdata.servicerequest_remark }}
+                                </p>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right; font-weight: 700; vertical-align: top;">
+                            ₹ {{ requestdata.servicerequest_amount }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="summary-wrapper">
+                <div class="summary-table">
+                    <div class="summary-row">
+                        <span>Taxable Amount</span>
+                        <span>₹ {{ requestdata.servicerequest_amount }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>GST (0%)</span>
+                        <span>₹ 0.00</span>
+                    </div>
+                    <div class="summary-row grand-total-row">
+                        <span>Total Amount</span>
+                        <span>₹ {{ requestdata.servicerequest_amount }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 60px; border-top: 1px dashed #e2e8f0; padding-top: 20px; font-size: 11px; color: #94a3b8; text-align: center;">
+                This is a computer-generated document for services rendered. No physical signature is required.
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="footer-note" style="font-size: 12px; color: #64748b;">
+                <i class="fa fa-shield-halved"></i> Verified Professional Invoice
+            </div>
+            <div class="btn-group">
+                <button onclick="window.history.back()" class="btn btn-back">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+                <button onclick="window.print()" class="btn btn-print">
+                    <i class="fa fa-print"></i> Print Bill
+                </button>
+            </div>
+        </div>
+    </div>
+</div><br><br>
+
+{% endblock content %}

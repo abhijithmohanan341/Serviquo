@@ -1,0 +1,82 @@
+{% if datas %}
+
+{% for i,j,s,so in datas %}
+<div class="product-card">
+
+    {% if so >= 10 %}
+    <div class="best-seller-badge">
+        <i class="fa-solid fa-trophy"></i> Best Seller
+    </div>
+    {% endif %}
+
+    <div class="img-box">
+        <img src="{{ i.product_photo.url }}">
+    </div>
+
+    <div class="p-sku">
+        <i class="fa-solid fa-barcode"></i> SKU: 00{{ i.id }}09
+    </div>
+
+    <a href="#" class="p-name">
+        {{ i.product_name }}
+    </a>
+
+    <div style="display:flex; align-items:center; margin-bottom:8px;">
+        {% for k in ar %}
+        {% if k <= j %} <i class="fa-solid fa-star" style="color:#ffa41c; font-size:13px;"></i>
+            {% else %}
+            <i class="fa-regular fa-star" style="color:#ddd; font-size:13px;"></i>
+            {% endif %}
+            {% endfor %}
+            <span class="rating-numeric">({{ j }}.0)</span>
+    </div>
+
+    {% if s > 0 %}
+    <div class="p-stock">
+        <i class="fa-solid fa-box-open"></i> In Stock
+    </div>
+    {% else %}
+    <div class="p-stock" style="color:#dc2626;">
+        <i class="fa-solid fa-circle-exclamation"></i> Out of Stock
+    </div>
+    {% endif %}
+
+    <div class="p-details">
+        {{ i.product_details }}
+    </div>
+
+    <div class="p-price">
+        ₹{{ i.product_price }}
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+
+        {% if s > 0 %}
+        <a href="{% url 'User:AddtoCart' i.id shopid %}" class="btn-press btn-cart">
+            <i class="fa-solid fa-cart-arrow-down"></i> Add to Cart
+        </a>
+        {% else %}
+        <a href="javascript:void(0);"
+            onclick="alert('{{ i.product_name }} is currently out of stock. New stock will be added soon.');"
+            class="btn-press btn-cart">
+            <i class="fa-solid fa-cart-arrow-down"></i> Add to Cart
+        </a>
+        {% endif %}
+
+        <a href="{% url 'User:BuyNowPage' i.id %}" class="btn-buy btn-press">
+            <i class="fa-solid fa-bolt-lightning"></i> Buy Now
+        </a>
+    </div>
+
+</div>
+{% endfor %}
+
+{% else %}
+
+<div class="empty-display"><br>
+    <i class="fa-solid fa-filter-circle-xmark"></i>
+    <h3>No Products Found</h3>
+    <p>No products match your selected filter.</p>
+</div>
+
+{% endif %}

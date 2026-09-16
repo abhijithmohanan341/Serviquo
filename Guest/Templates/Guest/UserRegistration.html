@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviquo | User Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #1e293b;
+            --primary-gold: #c6943f;
+            --bg-canvas: #fdfbf6;
+            --card-white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --error-red: #dc2626;
+            --border-subtle: rgba(0,0,0,0.06);
+            --input-focus: rgba(198, 148, 63, 0.1);
+        }
+
+        /* --- PREMIUM ENTRANCE ANIMATIONS --- */
+        @keyframes springReveal {
+            0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+            70% { transform: scale(1.01) translateY(-2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes staggerFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+            background-attachment: fixed;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .registration-card {
+            background: var(--card-white);
+            width: 100%;
+            max-width: 580px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(30, 41, 59, 0.04);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            animation: springReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card-header {
+            background: var(--primary-navy);
+            padding: 1.2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .back-btn-header {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            opacity: 0.6;
+        }
+        .back-btn-header:hover { opacity: 1; transform: translateY(-50%) translateX(-2px); }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .sub-header-bar {
+            background: #f8fafc;
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .sub-header-bar span {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-gold);
+            font-weight: 800;
+        }
+
+        .form-content { padding: 1.5rem 1.8rem; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1rem;
+        }
+
+        .section-tag {
+            grid-column: span 2;
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--primary-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-tag::after { content: ""; height: 1px; flex-grow: 1; background: var(--border-subtle); }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            animation: staggerFade 0.5s ease-out forwards;
+        }
+
+        .form-group label {
+            font-size: 0.58rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .custom-input, .custom-select, .custom-textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            background: #fafafa;
+            font-family: inherit;
+            font-size: 0.78rem;
+            transition: 0.2s;
+            box-sizing: border-box;
+        }
+
+        .custom-input:focus, .custom-select:focus, .custom-textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            background: #fff;
+            box-shadow: 0 0 0 3px var(--input-focus);
+        }
+
+        #email-error {
+            font-size: 0.55rem;
+            color: var(--error-red);
+            font-weight: 700;
+            margin-top: 2px;
+            display: none;
+        }
+
+        .full-row { grid-column: span 2; }
+        .custom-textarea { height: 60px; resize: none; }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.2rem;
+        }
+
+        .btn-base {
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            transition: 0.1s;
+        }
+
+        .btn-submit { flex: 3; background: var(--primary-navy); color: white; }
+        .btn-clear { flex: 1; background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border-subtle); }
+        .btn-base:active { transform: scale(0.96); }
+
+        .footer-compact-row {
+            text-align: center;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quote-text {
+            font-size: 0.62rem;
+            font-style: italic;
+            color: var(--text-muted);
+            margin: 0;
+            letter-spacing: 0.2px;
+        }
+
+        .signin-link {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--primary-gold);
+            text-decoration: none;
+            border-left: 1px solid var(--border-subtle);
+            padding-left: 8px;
+        }
+        .signin-link:hover { text-decoration: underline; }
+
+        @media (max-width: 550px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-row { grid-column: span 1; }
+            .footer-compact-row { flex-direction: column; gap: 4px; }
+            .signin-link { border-left: none; padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="registration-card">
+        <div class="card-header">
+            <i class="fa-solid fa-arrow-left back-btn-header" onclick="window.history.back()" title="Go Back"></i>
+            <h2>SERVI<span style="color: var(--primary-gold);">QUO</span></h2>
+        </div>
+        
+        <div class="sub-header-bar">
+            <span>User Account Registration</span>
+        </div>
+
+        <div class="form-content">
+            <form action="" method="post" id="userForm" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-grid">
+                    <div class="section-tag">Personal Details</div>
+
+                    <div class="form-group" style="animation-delay: 0.15s;">
+                        <label style="padding-bottom: 6px;"><i class="fa-solid fa-user"></i> &nbsp;&nbsp;Full Name</label>
+                        <input type="text" name="txt_name" id="txt_name" class="custom-input" required 
+                               placeholder="Enter Name" pattern="^[A-Z][a-zA-Z ]*$" title="Starts with Capital Letter">
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.2s;">
+                        <label style="padding-bottom: 6px;"><i class="fa-solid fa-phone"></i>&nbsp;&nbsp; Contact Number</label>
+                        <input type="text" name="txt_contact" id="txt_contact" class="custom-input" required 
+                               placeholder="8956412045" maxlength="10" pattern="[7-9]{1}[0-9]{9}" title="Phone number with 7-9 and remaing 9 digit with 0-9"/>
+                    </div>
+
+                    <div class="form-group full-row" style="animation-delay: 0.1s;">
+                        <label style="padding-bottom: 6px;"><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp; Email Address</label>
+                        <input type="email" name="txt_email" id="txt_email" class="custom-input" required placeholder="name@example.com">
+                        <span id="email-error">This email is already registered!</span>
+                    </div>
+
+                    <div class="section-tag">Logistics & KYC</div>
+
+                    <div class="form-group" style="animation-delay: 0.25s;">
+                        <label style="padding-bottom: 6px;">District</label>
+                        <select name="sel_district" id="sel_district" class="custom-select" required>
+                            <option value="">Select District</option>
+                            {% for i in district %}
+                            <option value="{{i.id}}">{{i.district_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.3s;">
+                        <label style="padding-bottom: 6px;">Place</label>
+                        <select name="sel_place" id="sel_place" class="custom-select" required>
+                            <option value="">Select Place</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-row" style="animation-delay: 0.35s;">
+                        <label style="padding-bottom: 6px;"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp; Home Address</label>
+                        <textarea name="txt_address" id="txt_address" class="custom-textarea" required placeholder="Permanent address details..."></textarea>
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.4s;">
+                        <label style="padding-bottom: 6px;"><i class="fa-solid fa-image"></i>&nbsp;&nbsp; Profile Photo</label>
+                        <input type="file" name="file_photo" class="custom-input" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.45s;">
+                        <label style="padding-bottom: 6px;"><i class="fa-solid fa-file-contract"></i>&nbsp;&nbsp; Identity Proof</label>
+                        <input type="file" name="file_proof" class="custom-input" required>
+                    </div>
+
+                    <div class="section-tag">Security</div>
+
+                    <div class="form-group" style="animation-delay: 0.5s;">
+                        <label style="padding-bottom: 6px;">Password</label>
+                        <input type="password" name="txt_password" id="txt_password" class="custom-input" required 
+                               placeholder="Create Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.55s;">
+                        <label style="padding-bottom: 6px;">Confirm Password</label>
+                        <input type="password" name="txt_conpassword" id="txt_conpassword" class="custom-input" required 
+                               placeholder="Verify Password">
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" name="btn_submit" id="btn_submit" class="btn-base btn-submit">
+                        <i class="fa-solid fa-user-check"></i> Register Account
+                    </button>
+                    <button type="reset" class="btn-base btn-clear">Clear</button>
+                </div>
+
+                <div class="footer-compact-row">
+                    <p class="quote-text">"Excellence is not a skill, it is an attitude."</p>
+                    <a href="{% url 'Guest:Login' %}" class="signin-link">Sign In here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Real-time Email Check
+        $("#txt_email").blur(function () {
+            var email = $(this).val();
+            if (email !== "") {
+                $.ajax({
+                    url: "{% url 'Guest:AjaxEmailCheck' %}", 
+                    data: { email: email },
+                    success: function (data) {
+                        if (data.exists) {
+                            $("#email-error").fadeIn();
+                            $("#txt_email").css("border-color", "var(--error-red)");
+                            $("#btn_submit").prop("disabled", true).css("opacity", "0.6");
+                        } else {
+                            $("#email-error").fadeOut();
+                            $("#txt_email").css("border-color", "var(--border-subtle)");
+                            $("#btn_submit").prop("disabled", false).css("opacity", "1");
+                        }
+                    }
+                });
+            }
+        });
+
+        // Cascading Dropdown
+        $("#sel_district").change(function () {
+            var did = $(this).val();
+            $.ajax({
+                url: "{% url 'Guest:ajaxplace' %}",
+                data: { did: did },
+                success: function (data) {
+                    $("#sel_place").html(data);
+                }
+            });
+        });
+
+        // Form Submit Validation
+        document.getElementById("userForm").addEventListener("submit", function(e){
+            if(document.getElementById("txt_password").value !== document.getElementById("txt_conpassword").value) {
+                e.preventDefault();
+                alert("Passwords do not match.");
+            }
+            var contact = document.getElementById("txt_contact").value;
+            if(contact.length !== 10 || isNaN(contact)){
+                e.preventDefault();
+                alert("Please enter a valid 10-digit mobile number.");
+            }
+        });
+    </script> 
+
+    {% if msg %}
+    <script>
+        alert("{{msg}}");
+        window.location="{% url 'Guest:UserRegistration' %}";
+    </script>
+    {% endif %}
+
+</body>
+</html>

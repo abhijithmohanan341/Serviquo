@@ -1,0 +1,467 @@
+{% extends 'Company/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --card-shadow: 0 18px 50px rgba(15, 23, 42, .08);
+    }
+
+    body {
+        background: linear-gradient(135deg, rgba(255, 246, 230, 0.4) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .viewbooking-wrapper {
+        padding: 40px 24px;
+        min-height: 100vh;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 30px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3);
+    }
+
+    .card {
+        max-width: 1200px;
+        margin: 0 auto 40px;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .booking-no {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: var(--amazon-blue);
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        z-index: 10;
+    }
+
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr auto;
+        gap: 22px;
+        padding: 75px 30px 26px;
+        border-bottom: 1px solid #e5e7eb;
+        align-items: stretch;
+    }
+
+    .info-panel {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        gap: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .info-panel:hover {
+        background: rgba(198, 148, 63, 0.05);
+        border-color: var(--serviquo-gold);
+    }
+
+    .profile-img-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--serviquo-gold);
+        background: #fff;
+        flex-shrink: 0;
+    }
+
+    .details-box {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .details-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--serviquo-gold);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+
+    .detail-row {
+        font-size: 13.5px;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .detail-row i {
+        color: var(--amazon-blue);
+        width: 16px;
+    }
+
+    .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        min-width: 200px;
+    }
+
+    .status-pill {
+        padding: 10px 22px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .status-pending {
+        background: #fff1c2;
+        color: #92400e;
+    }
+
+    .status-accepted {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-process {
+        background: #e0f2fe;
+        color: #075985;
+    }
+
+    .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* BUTTON STYLE */
+
+    .btn-action {
+        padding: 10px 18px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: none;
+
+        /* press effect */
+        position: relative;
+        top: 0;
+        box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+        transition: all 0.1s ease;
+    }
+
+    .btn-action:active {
+        top: 3px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-gold {
+        background: var(--serviquo-gold);
+        color: white;
+    }
+
+    .btn-blue {
+        background: var(--amazon-blue);
+        color: white;
+    }
+
+    .btn-red {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .btn-outline {
+        border: 1.5px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-1px);
+    }
+
+    /* TABLE */
+
+    .request-content-table {
+        width: 100%;
+        padding: 26px 30px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    th {
+        background: #f8fafc;
+        padding: 12px;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        border-bottom: 2px solid #e5e7eb;
+        text-align: center;
+
+        /* vertical partition */
+        border-right: 1px solid #e5e7eb;
+    }
+
+    th:last-child {
+        border-right: none;
+    }
+
+    td {
+        padding: 20px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 14px;
+        text-align: center;
+        word-wrap: break-word;
+
+        /* vertical partition */
+        border-right: 1px solid #f1f5f9;
+    }
+
+    td:last-child {
+        border-right: none;
+    }
+
+    .footer-total {
+        padding: 20px 30px;
+        background: #f8fafc;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .amount-tag {
+        font-size: 18px;
+        font-weight: 900;
+        color: var(--amazon-blue);
+        background: #eef2ff;
+        padding: 8px 20px;
+        border-radius: 30px;
+        border: 1px solid var(--serviquo-gold);
+    }
+</style>
+
+
+<div class="viewbooking-wrapper">
+
+    <div class="page-title-container">
+        <h2 class="page-title">Service Requests Management</h2>
+    </div>
+
+    {% for i in viewrequestdata %}
+
+    <div class="card">
+
+        <div class="booking-no">Request {{ forloop.counter }}</div>
+
+        <div class="header-grid">
+
+            <div class="info-panel">
+
+                <img src="{% if i.user.user_photo %}{{ i.user.user_photo.url }}{% else %}{% static 'Main/img/default-user.png' %}{% endif %}"
+                    class="profile-img-circle">
+
+                <div class="details-box">
+
+                    <div class="details-title">Customer Information</div>
+
+                    <div class="detail-row"><i class="fas fa-user"></i> <b>{{ i.user.user_name }}</b></div>
+                    <div class="detail-row"><i class="fas fa-envelope"></i> {{ i.user.user_email }}</div>
+                    <div class="detail-row"><i class="fas fa-phone"></i> {{ i.user.user_contact }}</div>
+                    <div class="detail-row"><i class="fas fa-location-dot"></i> {{ i.user.user_address }}</div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-panel">
+
+                {% if i.technician %}
+
+                <img src="{{ i.technician.technician_photo.url }}" class="profile-img-circle">
+
+                <div class="details-box">
+
+                    <div class="details-title">Assigned Technician</div>
+
+                    <div class="detail-row"><i class="fas fa-id-badge"></i> <b>{{ i.technician.technician_name }}</b>
+                    </div>
+                    <div class="detail-row"><i class="fas fa-phone-volume"></i> {{ i.technician.technician_contact }}
+                    </div>
+                    <div class="detail-row"><i class="fas fa-calendar-day"></i> {{ i.companyservice_date }}</div>
+
+                </div>
+
+                {% else %}
+
+                <div class="details-box" style="justify-content:center;align-items:center;width:100%;">
+
+                    <i class="fas fa-user-clock fa-2x" style="color:#cbd5e1;margin-bottom:10px;"></i>
+
+                    <div class="details-title" style="color:#94a3b8;">No Technician Assigned</div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="action-stack">
+
+                {% if i.companyservice_status == 0 %}
+                <div class="status-pill status-pending">New Request</div>
+                <a href="{% url 'Company:CompanyServiceAccept' i.id %}" class="btn-action btn-gold"><i
+                        class="fas fa-check"></i> Accept</a>
+                <a href="{% url 'Company:CompanyServiceReject' i.id %}" class="btn-action btn-red"><i
+                        class="fas fa-xmark"></i> Reject</a>
+
+                {% elif i.companyservice_status == 1 %}
+                <div class="status-pill status-accepted">Accepted</div>
+                <a href="{% url 'Company:Assign' i.id %}" class="btn-action btn-blue"><i class="fas fa-user-plus"></i>
+                    Assign Technician</a>
+                <a href="{% url 'Company:CompanyServiceReject' i.id %}" class="btn-action btn-outline">Reject
+                    instead</a>
+
+                {% elif i.companyservice_status == 2 %}
+                <div class="status-pill status-cancelled">Rejected</div>
+                <a href="{% url 'Company:CompanyServiceAccept' i.id %}" class="btn-action btn-gold">Re-Accept</a>
+
+                {% elif i.companyservice_status == 3 %}
+                <div class="status-pill status-process">Technician Assigned</div>
+
+                {% elif i.companyservice_status == 4 %}
+                <div class="status-pill status-process">Work Started</div>
+
+                {% elif i.companyservice_status == 5 %}
+                <div class="status-pill status-process">In Progress</div>
+
+                {% elif i.companyservice_status == 6 %}
+                <div class="status-pill status-completed">Work Completed</div>
+
+                {% elif i.companyservice_status == 7 %}
+                <div class="status-pill status-pending">Payment Pending</div>
+                <a href="{% url 'Company:ViewUserComplaint' i.id %}" class="btn-action btn-red"><i
+                        class="fas fa-triangle-exclamation"></i> View Complaint</a>
+
+                {% elif i.companyservice_status == 8 %}
+                <div class="status-pill status-cancelled">Cancelled</div>
+
+                {% elif i.companyservice_status == 9 %}
+                <div class="status-pill status-completed">Payment Done</div>
+                <div style="text-align:center; font-size:11px; font-weight:bold; color:#166534">WORK CLOSED</div>
+                <a href="{% url 'Company:ViewUserComplaint' i.id %}" class="btn-action btn-red"><i
+                        class="fas fa-triangle-exclamation"></i> View Complaint</a>
+                <a href="{% url 'Company:ViewCompanyServiceRating' i.id %}" class="btn-action btn-gold"><i
+                        class="fas fa-star"></i> View Rating</a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="request-content-table">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th style="width:50%;">Service Requirement</th>
+                        <th style="width:50%;">Company Remarks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>{{ i.companyservice_content }}</td>
+                        <td>{{ i.companyservice_remark|default:"No remarks added" }}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="footer-total">
+
+            <span style="font-weight:800;color:#64748b;text-transform:uppercase;font-size:11px">Service Charge:</span>
+
+            <div class="amount-tag">
+
+                {% if i.companyservice_amount %}
+                ₹{{ i.companyservice_amount }}
+                {% else %}
+                Pending...
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div style="text-align:center;padding:100px 20px;">
+        <i class="fas fa-folder-open fa-4x" style="color:#e2e8f0;margin-bottom:20px"></i>
+        <h3 style="color:var(--amazon-blue)">No requests found</h3>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Company:ViewRequest' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

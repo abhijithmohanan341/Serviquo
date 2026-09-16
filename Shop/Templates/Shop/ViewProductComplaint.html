@@ -1,0 +1,234 @@
+{% extends 'Shop/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --table-border: #333;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 50px;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 40px;
+        margin-top: 20px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 30px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3); 
+    }
+
+    .pro-table-wrapper {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 60px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .pro-table thead tr {
+        background-color: var(--amazon-blue);
+    }
+
+    .pro-table th {
+        padding: 14px 10px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    .pro-table td {
+        padding: 12px 10px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+        color: #444;
+    }
+
+    .product-img {
+        width: 70px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    .reply-btn {
+        background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+        border: 1px solid #90caf9;
+        color: #0d47a1 !important;
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 6px;
+        text-decoration: none !important;
+        display: inline-block;
+        position: relative;
+        top: 0;
+        transition: all 0.1s ease;
+        box-shadow: 0 3px 0 #90caf9;
+    }
+
+    .reply-btn:active {
+        top: 2px;
+        box-shadow: 0 1px 0 #90caf9;
+    }
+
+    .status-pending {
+        background: #fff8e1;
+        color: #f57c00;
+        border: 1px solid #ffe0b2;
+        padding: 4px 8px;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 4px;
+    }
+
+    .status-done {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #c8e6c9;
+        padding: 4px 8px;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 4px;
+    }
+    .navigation-header {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 20px 30px 0 30px;
+        }
+
+        .btn-back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--amazon-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back-nav:hover {
+            color: var(--link-blue);
+            transform: translat
+        }
+
+</style>
+
+<div class="container">
+
+    <a href="javascript:history.back()" class="btn-back-nav">
+        <i class="fa-solid fa-circle-left"></i> Back
+    </a>
+
+    <div class="page-title-container">
+        <h2 class="page-title">View Product Complaints</h2>
+    </div><br>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>User</th>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Date</th>
+                    <th>Reply</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in complaintproductdata %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td>{{ i.user.user_name }}</td>
+                    <td style="font-weight:600;">{{ i.product.product_name }}</td>
+                    <td>
+                        <img src="{{ i.product.product_photo.url }}" class="product-img">
+                    </td>
+                    <td>{{ i.complaint_title }}</td>
+                    <td style="max-width:220px;">{{ i.complaint_content }}</td>
+                    <td>{{ i.complaint_date }}</td>
+                    <td>
+                        {% if i.complaint_reply %}
+                            <span class="status-done">
+                                {{ i.complaint_reply }}
+                            </span>
+                        {% else %}
+                            <span class="status-pending">
+                                Pending
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if i.complaint_status == 0 %}
+                            <a href="{% url 'Shop:ComplaintReply' i.id %}" class="reply-btn">
+                                <i class="fa-solid fa-reply"></i> Reply
+                            </a>
+                        {% else %}
+                            <span class="status-done">
+                                <i class="fa-solid fa-check"></i> Replied
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" style="padding:20px;color:#bbb;font-style:italic;">
+                        No complaints available
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Shop:ViewProductComplaint' pid %}";
+</script>
+{% endif %}
+
+{% endblock content %}

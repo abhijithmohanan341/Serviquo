@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviquo | Choose Account Type</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Serviquo Theme */
+            --primary-navy: #2B3643;
+            --primary-gold: #D29C38;
+            --gold-light: rgba(210, 156, 56, 0.1);
+            --bg-canvas: #FDFBF6; /* Exact cream background matched from screenshot */
+            --card-bg: #ffffff;
+            --text-main: #2B3643;
+            --text-muted: #64748b;
+            --border-color: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-canvas);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .registration-container {
+            max-width: 1050px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header-section {
+            margin-bottom: 3.5rem;
+        }
+
+        .header-section h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-navy);
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        /* 4-Column Grid */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 3rem; 
+        }
+
+        .role-card {
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem 1.25rem;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(43, 54, 67, 0.02);
+        }
+
+        .role-card:hover {
+            border-color: var(--primary-gold);
+            background-color: var(--gold-light);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(43, 54, 67, 0.08);
+        }
+
+        .role-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .role-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Upgraded Back Button */
+        .back-btn-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem; 
+            color: var(--primary-navy);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 2rem; 
+            background-color: var(--card-bg);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(43, 54, 67, 0.02);
+        }
+
+        .back-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .back-link:hover {
+            border-color: var(--primary-gold);
+            color: var(--primary-gold);
+            background-color: var(--gold-light);
+            box-shadow: 0 6px 12px rgba(210, 156, 56, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Slide the arrow to the left on hover */
+        .back-link:hover .back-arrow {
+            transform: translateX(-4px); 
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .role-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="registration-container">
+        
+        <div class="header-section">
+            <h1>Join Serviquo</h1>
+            <p>Select your account type to begin the registration process.</p>
+        </div>
+
+        <div class="role-grid">
+            <a href="{% url 'Guest:UserRegistration' %}" class="role-card">
+                <div class="role-icon">👤</div>
+                <div class="role-title">User</div>
+                <div class="role-desc">Book services, manage your appliances, and shop securely.</div>
+            </a>
+
+            <a href="{% url 'Guest:CompanyRegistration' %}" class="role-card">
+                <div class="role-icon">🏢</div>
+                <div class="role-title">Company</div>
+                <div class="role-desc">Register your brand and manage authorized service networks.</div>
+            </a>
+
+            <a href="{% url 'Guest:ServiceProviderRegistration' %}" class="role-card">
+                <div class="role-icon">🛠️</div>
+                <div class="role-title">Service Provider</div>
+                <div class="role-desc">Offer your expertise, accept requests, and grow your business.</div>
+            </a>
+
+            <a href="{% url 'Guest:ShopRegistration' %}" class="role-card">
+                <div class="role-icon">🏪</div>
+                <div class="role-title">Shop</div>
+                <div class="role-desc">Sell appliances and spare parts directly to customers.</div>
+            </a>
+        </div>
+
+        <div class="back-btn-wrapper">
+            <a href="{% url 'Guest:Login' %}" class="back-link">
+                <svg class="back-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Login
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

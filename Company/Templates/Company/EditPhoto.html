@@ -1,0 +1,263 @@
+{% extends 'Company/Header.html' %}
+{% load static %}
+{% block content %}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --navy:#1e293b;
+    --gold:#c6943f;
+    --card-white:#ffffff;
+    --border-subtle: rgba(0,0,0,0.08);
+    --text-main:#1e293b;
+    --text-muted:#64748b;
+    --input-bg: #f8fafc;
+}
+
+body{
+    background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+    background-attachment: fixed;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--text-main);
+}
+
+.profile-mini-wrapper{
+    max-width: 480px; 
+    margin: 60px auto;
+    padding: 0 15px;
+}
+
+.profile-card{
+    background: var(--card-white);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+}
+
+/* Card Header - Increased Size & New Style */
+.card-inner-header {
+    background: #fafafa;
+    padding: 35px 25px;
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: center;
+}
+
+.card-inner-header i {
+    font-size: 35px; /* Increased size */
+    color: var(--gold);
+    margin-bottom: 12px;
+}
+
+.card-inner-header h3 {
+    font-family: 'Playfair Display', serif; /* Elegant font for heading */
+    font-size: 24px; /* Increased size */
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 1.5px;
+    color: var(--navy);
+}
+
+.info-section{ padding: 30px; }
+
+/* Preview Box */
+.current-preview-box {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.round-avatar-large {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    border: 4px solid #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.3s ease;
+}
+
+.round-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* Form Group & Input Styling */
+.form-group { margin-bottom: 20px; }
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* Undotted Solid Border Style */
+.input-container {
+    width: 100%;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid var(--border-subtle); /* Solid border */
+    border-radius: 8px;
+    background: var(--input-bg);
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Clean Hover Effect (Solid border color change) */
+input[type="file"]:hover {
+    border-color: var(--gold);
+    background: #ffffff;
+}
+
+input[type="file"]::file-selector-button {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    margin-right: 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Footer Buttons Row */
+.form-footer {
+    margin-top: 25px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn-unified {
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-submit {
+    flex: 2;
+    background: var(--navy);
+    color: #ffffff;
+}
+
+.btn-submit:hover { background: #334155; }
+
+.btn-cancel {
+    flex: 1;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+    text-decoration: none;
+}
+
+.btn-cancel:hover { background: #e2e8f0; }
+
+.btn-unified:active { transform: scale(0.96); }
+
+</style>
+
+<div class="profile-mini-wrapper">
+    <div class="profile-card">
+        
+        <div class="card-inner-header">
+            <i class="fa-solid fa-camera-rotate"></i>
+            <h3>Change Profile Logo</h3>
+        </div>
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="info-section">
+                
+                <div class="current-preview-box">
+                    <div class="round-avatar-large" id="avatarPreview">
+                        {% if editphoto.company_logo %}
+                            <img src="{{ editphoto.company_logo.url }}" alt="Current Logo" id="imgDisplay">
+                        {% else %}
+                            <img src="{% static 'Main/img/default-company.png' %}" alt="Default" id="imgDisplay">
+                        {% endif %}
+                    </div>
+                    <span class="preview-label" id="previewText">Current Profile Logo</span>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-image"></i> Choose Image File</label>
+                    <div class="input-container">
+                        <input type="file" name="file_logo" id="file_logo" accept="image/*" required onchange="previewImage(this)">
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn-unified btn-submit">
+                        <i class="fa-solid fa-check-circle"></i> Update Photo
+                    </button>
+                    <a href="{% url 'Company:CompanyProfile' %}" class="btn-unified btn-cancel">
+                        Cancel
+                    </a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        const file = input.files[0];
+        const display = document.getElementById('imgDisplay');
+        const text = document.getElementById('previewText');
+        const previewBox = document.getElementById('avatarPreview');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                display.src = e.target.result;
+                text.innerText = "Previewing Selected Photo";
+                previewBox.style.transform = "scale(1.05)";
+                previewBox.style.borderColor = "var(--gold)";
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Company:CompanyProfile' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

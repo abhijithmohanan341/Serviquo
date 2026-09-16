@@ -1,0 +1,240 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root {
+        --serviquo-gold: #c6943f;
+        --amazon-blue: #232f3e;
+        --soft-bg: rgba(255, 246, 230, 0.4);
+        --input-border: #d1d5db;
+        --cancel-gray: #f0f2f2;
+        --cancel-border: #d5d9d9;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--soft-bg) 0%, rgba(255, 250, 242, 0.4) 100%);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 650px; 
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .page-title-container {
+        text-align: center;
+        margin-bottom: 55px;
+    }
+
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-weight: 400;
+        font-size: 34px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: inline-block;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(198, 148, 63, 0.4);
+    }
+
+    .request-card {
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        border: 1px solid #f3f4f6;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--amazon-blue);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 8px;
+    }
+
+    .display-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--serviquo-gold);
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+        margin-bottom: 12px;
+    }
+
+    select, input[type="date"], textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--input-border);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+    }
+
+    textarea {
+        resize: none;
+        line-height: 1.5;
+    }
+
+    select:focus, input[type="date"]:focus, textarea:focus {
+        outline: none;
+        border-color: var(--serviquo-gold);
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(198, 148, 63, 0.1);
+    }
+
+    .button-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 35px;
+        gap: 5px;
+    }
+
+    /* Shared 3D Base Styling */
+    .btn-3d {
+        border-radius: 25px;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        box-sizing: border-box;
+        height: 50px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        position: relative;
+        top: 0;
+    }
+
+    /* 3D CANCEL BUTTON - Grey Style */
+    .btn-cancel-3d {
+        background: linear-gradient(to bottom, #ffffff, #f0f2f2);
+        border: 1px solid var(--cancel-border);
+        color: #4b5563;
+        padding: 0 30px;
+        box-shadow: 0 4px 0 var(--cancel-border);
+    }
+
+    .btn-cancel-3d:hover {
+        background: #f7f8f8;
+    }
+
+    /* 3D SUBMIT BUTTON - Gold Style */
+    .btn-submit-3d {
+        flex-grow: 1;
+        background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+        border: 1px solid #a88734;
+        color: #111;
+        box-shadow: 0 4px 0 #a88734;
+    }
+
+    .btn-submit-3d:hover {
+        background: #f4d078;
+    }
+
+    /* Shared Press Effect */
+    .btn-3d:active {
+        top: 3px;
+        box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="container">
+    <div class="page-title-container">
+        <h2 class="page-title">Service Request</h2>
+    </div>
+
+    <div class="request-card">
+        <form action="" method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Service Provider</label>
+                <div class="display-value">
+                    <i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i>
+                    {{ serviceprovider.serviceprovider_name }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="sel_servicetype">Expertise Needed</label>
+                <select name="sel_servicetype" id="sel_servicetype" required>
+                    <option value="" disabled selected>Choose a service...</option>
+                    {% for i in servicetypedata %}
+                    <option value="{{ i.servicetype.id }}">
+                        {{ i.servicetype.servicetype_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="txt_date">Preferred Date</label>
+                <input type="date" name="txt_date" id="txt_date" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="txt_content">Details</label>
+                <textarea name="txt_content" id="txt_content" rows="4" 
+                          placeholder="Describe your requirements..." required></textarea>
+            </div>
+
+            <div class="button-row">
+                <a href="javascript:history.back()" class="btn-3d btn-cancel-3d">
+                     Cancel
+                </a>
+
+                <button type="submit" name="btn_submit" class="btn-3d btn-submit-3d">
+                    <i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Send Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div><br><br>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'User:MyServiceRequest' %}";
+</script>
+{% endif %}
+
+<script>
+    const today = new Date();
+    function formatDate(date) {
+        let d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+    }
+
+    const dateInput = document.getElementById("txt_date");
+    dateInput.min = formatDate(today);
+
+    let maxDate = new Date();
+    maxDate.setDate(today.getDate() + 30);
+    dateInput.max = formatDate(maxDate);
+</script>
+
+{% endblock content %}

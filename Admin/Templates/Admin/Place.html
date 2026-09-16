@@ -1,0 +1,283 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    .path-nav {
+        font-size: 13px;
+        color: #8d94ad;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .path-nav span.current {
+        color: #7b61ff;
+        font-weight: 800;
+    }
+
+    .brand-heading {
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #1c233a;
+        position: relative;
+        display: block;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%;
+    }
+
+    .brand-heading::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #1c233a;
+        border-radius: 10px;
+    }
+
+    .custom-label {
+        display: block;
+        font-weight: 700;
+        font-size: 11px;
+        color: #1c233a;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+
+    .sq-input {
+        border: 2px solid #ebedf2;
+        border-radius: 8px;
+        padding: 10px 15px;
+        width: 100%;
+        font-size: 14px;
+        background-color: #ffffff;
+    }
+
+    .btn-carbon {
+        background: #1c233a;
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 8px;
+        position: relative;
+        box-shadow: 0 5px 0px #000;
+        transition: all 0.1s;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .btn-carbon:active {
+        transform: translateY(4px);
+        box-shadow: 0 1px 0px #000;
+    }
+
+    .table-wrapper {
+        max-width: 800px;
+    }
+
+    .table-modern {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    .text-center-align {
+        text-align: center !important;
+    }
+
+    .table-modern thead th {
+        color: #8d94ad;
+        font-size: 10px;
+        text-transform: uppercase;
+        padding: 10px 15px;
+    }
+
+    .table-modern tbody tr {
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .table-modern td {
+        padding: 12px 15px !important;
+        vertical-align: middle;
+        border: none;
+        font-size: 14px;
+    }
+
+    .table-modern td:first-child {
+        border-radius: 10px 0 0 10px;
+    }
+
+    .table-modern td:last-child {
+        border-radius: 0 10px 10px 0;
+    }
+
+    .action-container {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .badge-action {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    .badge-edit {
+        background: #eef5ff;
+        color: #177dff;
+    }
+
+    .badge-delete {
+        background: #fff2f2;
+        color: #f3545d;
+    }
+</style>
+<div class="container">
+    <div class="page-inner py-5">
+        <div class="path-nav">
+            MANAGE DATA &nbsp; <i class="fas fa-chevron-right" style="font-size: 9px;"></i> &nbsp; <span
+                class="current">PLACE</span>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <h4 class="brand-heading">REGISTER PLACE</h4>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="custom-label">Select District</label>
+                                <select name="sel_district" class="sq-input" required>
+                                    <option value="">--Select District--</option>
+                                    {% for i in district %}
+                                    <option {% if editdata.district_id == i.id %} selected {% endif %} value="{{i.id}}">
+                                        {{i.district_name}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="custom-label">Enter Place Name</label>
+                                <input type="text" name="txt_place" class="sq-input" placeholder="e.g. Aluva"
+                                    value="{{editdata.place_name}}" required>
+                            </div>
+                            <button type="submit" name="btn_submit" class="btn-carbon">ADD PLACE</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="table-wrapper">
+                    <h4 class="brand-heading">DATABASE RECORDS</h4>
+                    <div class="mb-3" style="max-width:250px;">
+                        <label class="custom-label">Search by District</label>
+                        <select id="districtFilter" class="sq-input">
+                            <option value="">All Districts</option>
+                            {% for i in district %}
+                            <option value="{{i.district_name|upper}}">
+                                {{i.district_name}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th class="text-center-align" style="width: 100px;">SL NO</th>
+                                <th class="text-center-align" style="width: 180px;">DISTRICT</th>
+                                <th class="text-center-align" style="width: 160px;">PLACE NAME</th>
+                                <th class="text-center-align" style="width: 120px;">MANAGEMENT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="placeTable">
+                            {% for i in place %}
+                            <tr class="data-row" data-district="{{ i.district.district_name|upper }}">
+                                <td class="text-center-align sl-no-cell">
+                                    <span class="text-muted fw-bold">{{forloop.counter}}</span>
+                                </td>
+                                <td class="text-center-align" style="width: 180px;">
+                                    <span class="text-muted" style="text-transform: uppercase;">
+                                        {{ i.district.district_name }}
+                                    </span>
+                                </td>
+                                <td class="text-center-align" style="width: 160px;">
+                                    <span style="text-transform: uppercase;">
+                                        {{ i.place_name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-container">
+                                        <a href="{% url 'Admin:editplace' i.id %}" class="badge-action badge-edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'Admin:deletePlace' i.id %}" class="badge-action badge-delete"
+                                            onclick="return confirm('Delete this record?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr id="emptyRow" style="display: none;">
+                                <td colspan="4" class="text-center-align py-5">
+                                    <span class="text-muted">No records found for this district.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const filterSelect = document.getElementById("districtFilter");
+    const tableRows = document.querySelectorAll(".data-row");
+    const emptyRow = document.getElementById("emptyRow");
+
+    filterSelect.addEventListener("change", function () {
+        let selected = this.value;
+        let visibleCount = 0;
+
+        tableRows.forEach(function (row) {
+            let district = row.getAttribute("data-district");
+            if (selected === "" || district === selected) {
+                row.style.display = "";
+                visibleCount++;
+                row.querySelector(".sl-no-cell span").textContent = visibleCount;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        emptyRow.style.display = (visibleCount === 0) ? "" : "none";
+    });
+</script>
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'Admin:Place' %}";
+</script>
+{% endif %}
+{% endblock content %}

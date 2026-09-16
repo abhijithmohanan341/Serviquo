@@ -1,0 +1,475 @@
+{% extends 'Company/Header.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-navy: #1e293b;
+        --primary-gold: #c6943f;
+        --bg-canvas: #fdfbf6;
+        --card-white: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --error-red: #dc2626;
+        --border-subtle: rgba(0,0,0,0.06);
+        --input-focus: rgba(198, 148, 63, 0.1);
+        --amazon-blue: #232f3e;
+        --table-border: #333;
+        --light-divider: #e2e8f0;
+    }
+
+    body {
+        background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        background-attachment: fixed;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text-main);
+    }
+
+    @keyframes springReveal {
+        0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+        70% { transform: scale(1.01) translateY(-2px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes staggerFade {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .registration-card {
+        background: var(--card-white);
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto 50px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(30, 41, 59, 0.04);
+        border: 1px solid var(--border-subtle);
+        overflow: hidden;
+        animation: springReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .card-header {
+        background: var(--primary-navy);
+        padding: 1.2rem;
+        text-align: center;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .sub-header-bar {
+        background: #f8fafc;
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .sub-header-bar span {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--primary-gold);
+        font-weight: 800;
+    }
+
+    .form-content { padding: 1.5rem 1.8rem; }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.7rem 1rem;
+    }
+
+    .section-tag {
+        grid-column: span 2;
+        font-size: 0.55rem;
+        font-weight: 800;
+        color: var(--primary-gold);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .section-tag::after { content: ""; height: 1px; flex-grow: 1; background: var(--border-subtle); }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        animation: staggerFade 0.5s ease-out forwards;
+    }
+
+    .form-group label {
+        font-size: 0.58rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+
+    .custom-input, .custom-select, .custom-textarea {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        background: #fafafa;
+        font-family: inherit;
+        font-size: 0.78rem;
+        transition: 0.2s;
+        box-sizing: border-box;
+    }
+
+    .custom-input:focus, .custom-select:focus, .custom-textarea:focus {
+        outline: none;
+        border-color: var(--primary-gold);
+        background: #fff;
+        box-shadow: 0 0 0 3px var(--input-focus);
+    }
+
+    #email-error {
+        font-size: 0.55rem;
+        color: var(--error-red);
+        font-weight: 700;
+        margin-top: 2px;
+        display: none;
+    }
+
+    .full-row { grid-column: span 2; }
+    .custom-textarea { height: 55px; resize: none; }
+
+    .action-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 1.2rem;
+    }
+
+    .btn-base {
+        padding: 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        transition: 0.1s;
+    }
+
+    .btn-submit { flex: 3; background: var(--primary-navy); color: white; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-clear { flex: 1; background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border-subtle); }
+    .btn-base:active:not(:disabled) { transform: scale(0.96); }
+
+    .footer-compact-row {
+        text-align: center;
+        margin-top: 1rem;
+        padding-top: 0.8rem;
+        border-top: 1px solid var(--border-subtle);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .quote-text {
+        font-size: 0.62rem;
+        font-style: italic;
+        color: var(--text-muted);
+        margin: 0;
+        letter-spacing: 0.2px;
+    }
+
+    .page-title-container { text-align: center; margin-bottom: 25px; }
+    .page-title {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 22px;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        display: inline-block;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(198, 148, 63, 0.3);
+    }
+
+    .pro-table-wrapper {
+        background: #fff;
+        border: 2px solid var(--table-border);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 60px;
+        overflow-x: auto;
+    }
+
+    .pro-table { width: 100%; border-collapse: collapse; }
+    .pro-table thead tr { background-color: var(--amazon-blue); }
+    .pro-table th {
+        padding: 12px 8px;
+        font-size: 11px;
+        color: #fff;
+        text-align: center;
+        text-transform: uppercase;
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .pro-table td {
+        padding: 12px 8px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid var(--light-divider);
+        font-size: 12px;
+        color: #444;
+    }
+
+    .img-frame { width: 80px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; width: 80px; cursor: pointer;}
+    .img-framephoto { width: 55px; height: 55px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; }
+
+    .btn-mgmt {
+        width: 80px;
+        padding: 6px 0;
+        border-radius: 4px;
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        border: 1px solid;
+        transition: 0.1s;
+    }
+
+    .btn-edit-pro { background: #e3f2fd; border-color: #90caf9; color: #0d47a1; box-shadow: 0 3px 0 #90caf9; }
+    .btn-delete-pro { background: #ffebee; border-color: #ef9a9a; color: #b71c1c; box-shadow: 0 3px 0 #ef9a9a; }
+    .btn-mgmt:active { transform: translateY(2px); box-shadow: none; }
+
+    @media (max-width: 600px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .full-row { grid-column: span 1; }
+    }
+</style>
+
+<div class="container">
+    <div class="registration-card">
+        <div class="card-header">
+            <h2><span style="color:white;">SERVI</span><span style="color: var(--primary-gold);">QUO</span></h2>
+        </div>
+        
+        <div class="sub-header-bar">
+            <span>Technician Enrollment</span>
+        </div>
+
+        <div class="form-content">
+            <form action="" method="post" id="technicianForm" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-grid">
+                    <div class="section-tag">Personal Profile</div>
+                    
+                    <div class="form-group" style="animation-delay: 0.1s;">
+                        <label><i class="fa-solid fa-user"></i> Full Name</label>
+                        <input type="text" name="txt_name" class="custom-input" value="{{editdata.technician_name}}" required 
+                               placeholder="John Doe" pattern="^[A-Z]+[a-zA-Z ]*$" title="Name Allows Only Alphabets, Spaces and First Letter Must Be Capital Letter">
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.15s;">
+                        <label><i class="fa-solid fa-phone"></i> Contact Number</label>
+                        <input type="text" name="txt_contact" class="custom-input" value="{{editdata.technician_contact}}" required 
+                               placeholder="9876543210" maxlength="10" pattern="[7-9]{1}[0-9]{9}" title="Phone number with 7-9 and remaing 9 digit with 0-9"/>
+                    </div>
+
+                    <div class="form-group full-row" style="animation-delay: 0.2s;">
+                        <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                        <input type="email" name="txt_email" id="txt_email" class="custom-input" value="{{editdata.technician_email}}" required placeholder="technician@example.com">
+                        <span id="email-error">This email is already registered!</span>
+                    </div>
+
+                    <div class="section-tag">Logistics</div>
+
+                    <div class="form-group" style="animation-delay: 0.25s;">
+                        <label>District</label>
+                        <select name="sel_district" id="sel_district" class="custom-select" required>
+                            <option value="">--Select District--</option>
+                            {% for i in district %}
+                            <option {% if i.id == editdata.place.district.id %} selected {% endif %} value="{{i.id}}">{{i.district_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.3s;">
+                        <label>Place</label>
+                        <select name="sel_place" id="sel_place" class="custom-select" required>
+                            <option value="">--Select Place--</option>
+                            {% for i in place %}
+                            <option {% if i.id == editdata.place.id %} selected {% endif %} value="{{i.id}}">{{i.place_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group full-row" style="animation-delay: 0.35s;">
+                        <label><i class="fa-solid fa-map-pin"></i> Permanent Address</label>
+                        <textarea name="txt_address" class="custom-textarea" required placeholder="Enter full address..." rows="5">{{editdata.technician_address}}</textarea>
+                    </div>
+
+                    <div class="section-tag">Documents & Security</div>
+
+                    <div class="form-group" style="animation-delay: 0.4s;">
+                        <label><i class="fa-solid fa-image"></i> Profile Photo</label>
+                        <input type="file" name="file_photo" class="custom-input" {% if not editdata %}required{% endif %}>
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.45s;">
+                        <label><i class="fa-solid fa-file-contract"></i> Identity Proof</label>
+                        <input type="file" name="file_proof" class="custom-input" {% if not editdata %}required{% endif %}>
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.5s;">
+                        <label>Password</label>
+                        <input type="password" name="txt_password" id="txt_password" class="custom-input" value="{{editdata.technician_password}}" 
+                               required placeholder="Create Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+                    </div>
+
+                    <div class="form-group" style="animation-delay: 0.55s;">
+                        <label>Confirm Password</label>
+                        <input type="password" name="txt_conpassword" id="txt_conpassword" class="custom-input" value="{{editdata.technician_password}}" 
+                               required placeholder="Verify Password">
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" id="btn_submit" class="btn-base btn-submit">
+                        <i class="fa-solid fa-user-plus"></i> {% if editdata %}Update{% else %}Register{% endif %} Technician
+                    </button>
+                    <button type="reset" class="btn-base btn-clear">Cancel</button>
+                </div>
+
+                <div class="footer-compact-row">
+                    <p class="quote-text">"Excellence is not a skill, it is an attitude."</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="page-title-container">
+        <h2 class="page-title">Registered Technicians List</h2>
+    </div>
+
+    <div class="pro-table-wrapper">
+        <table class="pro-table">
+            <thead>
+                <tr>
+                    <th>SL NO</th>
+                    <th>Photo</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th>District</th>
+                    <th>Place</th>
+                    <th>Proof</th>
+                    <th width="120">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in technicianregistration %}
+                <tr>
+                    <td><strong>{{ forloop.counter }}</strong></td>
+                    <td><a href="{{i.technician_photo.url}}" target="_blank"><img src="{{i.technician_photo.url}}" class="img-framephoto"></a></td>
+                    <td style="font-weight: 600;">{{ i.technician_name }}</td>
+                    <td>{{ i.technician_email }}</td>
+                    <td>{{ i.technician_contact }}</td>
+                    <td style="max-width: 200px;">{{ i.technician_address }}</td>
+                    <td>{{ i.place.district.district_name }}</td>
+                    <td>{{ i.place.place_name }}</td>
+                    <td><a href="{{i.technician_proof.url}}" target="_blank"><img src="{{i.technician_proof.url}}"
+                                        class="img-frame"></a></td>
+                    <td>
+                        <div class="action-container" style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+                            <a href="{% url 'Company:editTechnician' i.id %}" class="btn-mgmt btn-edit-pro" style="text-decoration: none;">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </a>
+                            <a href="{% url 'Company:deleteTechnician' i.id %}" class="btn-mgmt btn-delete-pro" style="text-decoration: none;" onclick="return confirm('Are you sure delete profile?')">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    // Real-time Email Existence Check
+    $("#txt_email").blur(function () {
+        var email = $(this).val();
+        if (email !== "") {
+            $.ajax({
+                url: "{% url 'Guest:AjaxEmailCheck' %}", 
+                data: { email: email },
+                success: function (data) {
+                    if (data.exists) {
+                        $("#email-error").fadeIn();
+                        $("#txt_email").css("border-color", "var(--error-red)");
+                        $("#btn_submit").prop("disabled", true);
+                    } else {
+                        $("#email-error").fadeOut();
+                        $("#txt_email").css("border-color", "var(--border-subtle)");
+                        $("#btn_submit").prop("disabled", false);
+                    }
+                }
+            });
+        }
+    });
+
+    $("#sel_district").change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Guest:ajaxplace' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $("#sel_place").html(data);
+            },
+        });
+    });
+
+    document.getElementById("technicianForm").addEventListener("submit", function(event){
+        var password = document.getElementById("txt_password").value;
+        var confirmPassword = document.getElementById("txt_conpassword").value;
+
+        if(password !== confirmPassword) {
+            event.preventDefault();
+            alert("Passwords do not match! Please check and try again.");
+            document.getElementById("txt_conpassword").focus();
+        }
+    });
+</script>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'Company:TechnicianRegistration' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

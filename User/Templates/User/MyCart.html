@@ -1,0 +1,543 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+{% load mathfilters %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Secure Payment</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --amzn-blue: #007185;
+            --text-base: #1e293b;
+            --text-muted: #64748b;
+            --border-subtle: #e2e8f0;
+            --price-clr: #dc2626;
+            --success-clr: #16a34a;
+            --bg-light: #f8fafc;
+            --accent-yellow: #FFD814;
+            --accent-hover: #F7CA00;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Public Sans', sans-serif;
+            color: var(--text-base);
+            margin: 0;
+            background: linear-gradient(135deg, #fdf6ec 0%, #ffffff 100%);
+        }
+
+        .main-wrapper {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 40px 90px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .checkout-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-subtle);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        /* Card Header with Back Button */
+        .section-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .card-back-btn {
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        .card-back-btn:hover {
+            background: #f1f5f9;
+            color: var(--amzn-blue);
+            border-color: var(--amzn-blue);
+        }
+
+        .empty-cart-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .empty-cart-wrapper i {
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart-wrapper h3 {
+            color: #475569;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .empty-cart-wrapper p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .delivery-estimate-banner {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .delivery-estimate-banner i {
+            font-size: 24px;
+            color: #0369a1;
+        }
+
+        .product-row {
+            display: flex;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: opacity 0.3s ease;
+        }
+
+        .product-row:last-child {
+            border-bottom: none;
+        }
+
+        .product-image-box {
+            width: 140px;
+            height: 140px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-info {
+            flex-grow: 1;
+            padding: 0 25px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--amzn-blue);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .vendor-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .unit-price-tag {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .delivery-date-text {
+            font-size: 13px;
+            color: var(--success-clr);
+            font-weight: 600;
+            background: #f0fdf4;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 5px;
+        }
+
+        .qty-number-input {
+            width: 55px;
+            height: 25px;
+            padding: 5px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .delete-btn {
+            font-size: 13px;
+            color: #ef4444;
+            text-decoration: none;
+            font-weight: 500;
+            border-left: 1px solid #ddd;
+            padding-left: 15px;
+        }
+
+        .price-display {
+            text-align: right;
+            min-width: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .total-price-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .subtotal-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-container {
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            resize: none;
+            line-height: 1.5;
+            height: 125px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .fee-info-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .grand-total {
+            border-top: 2px solid var(--border-subtle);
+            padding-top: 15px;
+            margin-top: 15px;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--price-clr);
+        }
+
+        .card-back-btn:active {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .buy-now-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #a88734;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            color: #111;
+            cursor: pointer;
+            box-shadow: 0 2px 0 rgba(184, 134, 11, 1);
+            transition: all .1s ease;
+            margin-top: 6px;
+        }
+
+        .buy-now-btn:hover {
+            background: linear-gradient(to bottom, #f5d78e, #eeb933);
+        }
+
+        .buy-now-btn:active {
+            transform: scale(0.96);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1100px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+                padding: 40px 20px;
+            }
+
+            .summary-container {
+                position: static;
+            }
+        }
+
+        .secure-footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #70757a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+
+<body onload="recalculateCart(); setDeliveryDates();">
+
+    <form method="POST" id="Form" data-quantity-url="{% url 'User:cartqty' %}">
+        {% csrf_token %}
+
+        <div class="main-wrapper">
+
+            {% if cartdata %}
+            <div>
+                <div class="delivery-estimate-banner">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <div>
+                        <div style="font-weight: 700; color: #0369a1;">Standard Delivery Guaranteed</div>
+                        <div style="font-size: 14px; color: #0c4a6e;">Scheduled arrival: <span class="arrival-date-main"
+                                style="font-weight: 700;"></span></div>
+                    </div>
+                </div>
+
+                <div class="checkout-card">
+                    <div class="section-title-container">
+                        <div class="section-title">
+                            <i class="fa-solid fa-bag-shopping" style="color: var(--amzn-blue);"></i>
+                            Review Items and Shipping
+                        </div>
+                        <a href="javascript:history.back()" class="card-back-btn">
+                            <i class="fa-solid fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+
+                    {% for i in cartdata %}
+                    <div class="product-row">
+                        <div class="product-image-box">
+                            <img src="{{i.product.product_photo.url}}" class="product-image" alt="Product">
+                        </div>
+
+                        <div class="product-info">
+                            <a href="#" class="product-name">{{i.product.product_name}}</a>
+                            <div class="vendor-info">Sold by: <span style="color: var(--amzn-blue);">{{i.product.shop.shop_name }}</span></div>
+
+                            <span class="unit-price-tag">₹{{i.product.product_price}} <small
+                                    style="font-weight: normal; color: var(--text-muted);">/ piece</small></span>
+
+                            <div class="delivery-date-text">
+                                <i class="fa-solid fa-truck-fast"></i> Arriving by: <span
+                                    class="arrival-date-item"></span>
+                            </div>
+
+                            <div class="action-controls"><br>
+                                <div class="qty-wrapper">
+                                    Qty:
+                                    <input type="number" class="qty-trigger qty-number-input" data-id="{{i.id}}"
+                                        value="{{i.cart_Qty}}" min="1" max="{{i.total_stock}}">&nbsp;
+                                    <a href="{% url 'User:delcart' i.id %}" class="delete-btn">
+                                        <i class="fas fa-trash-alt"></i> &nbsp;Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" class="unit-price" value="{{i.product.product_price}}">
+
+                        <div class="price-display">
+                            <span class="subtotal-label">Subtotal</span>
+                            <span class="total-price-text">
+                                ₹<span class="item-total-val">{{i.cart_Qty|mul:i.product.product_price}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="summary-container">
+                <div class="checkout-card">
+                    <div class="summary-header">Order Summary</div>
+
+                    <label class="form-label"><i class="fa-solid fa-location-dot"></i> Delivery Address</label>
+                    <textarea name="txt_address" required
+                        placeholder="House No., Street Name, City, Landmark, Pincode..."></textarea>
+
+                    <div class="summary-line">
+                        <span>Items ({{ cartdata|length }}):</span>
+                        <span>₹<span id="raw-subtotal">0</span></span>
+                    </div>
+
+                    <div class="summary-line">
+                        <span>Shipping:</span>
+                        <span style="color: var(--success-clr); font-weight: 700;">FREE</span>
+                    </div>
+
+                    <div class="summary-line">
+                        <span>Platform Fee (0%):</span>
+                        <span>₹<span id="platform-fee-val">0</span></span>
+                    </div>
+
+                    <div class="fee-info-box">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Enjoy 0% platform fees for your transaction.
+                    </div>
+
+                    <div class="summary-line grand-total">
+                        <span>Order Total :</span>
+                        <span>₹<span id="grand-total-val">0</span></span>
+                    </div>
+
+                    <input type="hidden" id="final-amt-input" name="carttotalamt">
+
+                    <button type="submit" class="buy-now-btn" name="btn_checkout">
+                        Proceed to Checkout
+                    </button>
+                    <div class="secure-footer">
+                        <i class="fa-solid fa-lock"></i> 100% Secure Transaction
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+            <div class="empty-cart-wrapper">
+                <i class="fa-solid fa-cart-plus fa-5x"></i>
+                <h3 style="opacity: 0.5; text-transform: uppercase; padding-bottom: 1%;">Your cart is empty</h3>
+                <p>Your cart is empty. Please add services to proceed with your order.</p>
+                <a href="{% url 'User:ViewShop' %}" class="buy-now-btn"
+                    style="display:inline-block; width:auto; padding: 12px 40px; text-decoration:none; text-transform: uppercase;">Add Product to cart</a>
+            </div><br>
+            {% endif %}
+
+        </div>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        const currencyFormatter = new Intl.NumberFormat('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
+
+        function setDeliveryDates() {
+            const today = new Date();
+            const deliveryDate = new Date(today);
+            deliveryDate.setDate(today.getDate() + 7);
+            const options = { weekday: 'long', month: 'short', day: 'numeric' ,year :'numeric'  };
+            const formatted = deliveryDate.toLocaleDateString('en-IN', options);
+
+            $(".arrival-date-main, .arrival-date-item").text(formatted);
+        }
+
+        $(".qty-trigger").on('change keyup', function () {
+            let newQty = $(this).val();
+            let cartId = $(this).data('id');
+            let endpoint = $("#Form").attr("data-quantity-url");
+            let $row = $(this).closest('.product-row');
+            let unitPrice = parseFloat($row.find('.unit-price').val());
+
+            if (newQty < 1) return;
+
+            $row.css('opacity', '0.5');
+
+            $.ajax({
+                url: endpoint,
+                data: { QTY: newQty, ALT: cartId },
+                success: function () {
+                    let newItemTotal = newQty * unitPrice;
+                    $row.find('.item-total-val').text(newItemTotal.toFixed(2));
+                    $row.css('opacity', '1');
+                    recalculateCart();
+                },
+                error: function () {
+                    $row.css('opacity', '1');
+                }
+            });
+        });
+
+        function recalculateCart() {
+            let subtotal = 0;
+            $(".item-total-val").each(function () {
+                let itemVal = parseFloat($(this).text().replace(/,/g, ''));
+                if (!isNaN(itemVal)) subtotal += itemVal;
+            });
+
+            let platformFee = 0;
+            let finalTotal = subtotal + platformFee;
+
+            $("#raw-subtotal").text(currencyFormatter.format(subtotal));
+            $("#platform-fee-val").text(currencyFormatter.format(platformFee));
+            $("#grand-total-val").text(currencyFormatter.format(finalTotal));
+            $("#final-amt-input").val(finalTotal.toFixed(2));
+        }
+    </script>
+
+</body>
+
+</html>
+{% endblock content %}
